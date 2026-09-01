@@ -4,1044 +4,342 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>刀劍男士顕現帳</title>
-
-<!-- 用來把顯現帳轉成 PNG 圖片 -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <style>
-* { box-sizing: border-box; }
-
-:root {
-    --brown: #76583d;
-    --light-brown: #a98b68;
-    --paper: #f5f1e8;
-    --red: #a51f67;
+*{box-sizing:border-box}
+body{
+ margin:0;padding:20px;color:#333;
+ font-family:"Microsoft JhengHei","Microsoft YaHei","Noto Sans CJK TC",sans-serif;
+ background:#eee9df;
 }
-
-body {
-    margin: 0;
-    padding: 20px;
-    color: #333;
-    font-family: "Microsoft JhengHei", "Microsoft YaHei", "Noto Sans CJK TC", sans-serif;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.65), transparent 28%),
-        radial-gradient(circle at 80% 70%, rgba(180,160,130,.10), transparent 32%),
-        #eee9df;
+h1{text-align:center;margin:8px 0;font-size:30px}
+#sword-count{text-align:center;color:#777;margin-bottom:18px}
+.panel{max-width:900px;margin:14px auto;padding:18px;background:rgba(255,255,255,.92);border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.panel h2{margin:0 0 12px;font-size:20px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.field{display:flex;align-items:center;gap:8px}
+.field label{white-space:nowrap;font-weight:bold}
+input[type=text],input[type=date],select{
+ border:1px solid #cfc7ba;border-radius:7px;padding:9px 10px;font-size:16px;
+ font-family:"Microsoft JhengHei",sans-serif;background:#fff
 }
-
-h1 {
-    text-align: center;
-    margin: 8px 0 8px;
-    font-size: 30px;
-    font-family: "Microsoft JhengHei", sans-serif;
+input[type=text]{min-width:180px} input[type=date]{min-width:170px}
+button{border:0;border-radius:8px;padding:10px 16px;font-size:16px;cursor:pointer;font-family:"Microsoft JhengHei",sans-serif;background:#76583d;color:#fff}
+button:hover{filter:brightness(.92)}
+.secondary{background:#777}.green{background:#65785c}.red-button{background:#a55a5a}
+.note{margin:8px 0 0;color:#777;font-size:14px;line-height:1.7}
+details summary{cursor:pointer;font-weight:bold;font-size:17px}
+textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;border-radius:7px;padding:10px;font:16px/1.7 "Microsoft JhengHei",sans-serif}
+.type-buttons{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.type-button{background:#ddd;color:#333}.type-button.selected{background:#76583d;color:#fff}
+.position-option{display:inline-flex;align-items:center;gap:7px;margin:8px 15px 8px 0;font-size:16px}
+.position-option input{width:18px;height:18px}
+#select-area,#move-area{display:none}
+#display-area{max-width:900px;margin:20px auto}
+.sword-row{
+ display:grid;grid-template-columns:48px minmax(0,1fr) 70px 70px;gap:8px;
+ align-items:center;padding:8px 10px;margin:5px 0;background:#fff;border-radius:8px;
+ box-shadow:0 1px 5px rgba(0,0,0,.10)
 }
-
-#sword-count {
-    text-align: center;
-    color: #777;
-    margin-bottom: 18px;
+.sword-row .num{color:#777;text-align:center}
+.sword-row .name{font-size:18px}.sword-row .type{font-size:13px;color:#76583d}
+.kiwami-label{display:flex;align-items:center;gap:4px;font-size:14px;cursor:pointer}
+.kiwami-label input{width:18px;height:18px}
+#empty-message{text-align:center;color:#888;padding:35px}
+#output-wrap{display:none;margin:35px auto}
+#output-sheet{
+ position:relative;width:1600px;height:900px;overflow:hidden;
+ color:#222;background:
+ radial-gradient(circle at 20% 20%,rgba(255,255,255,.70),transparent 25%),
+ radial-gradient(circle at 78% 72%,rgba(150,130,100,.08),transparent 30%),
+ repeating-linear-gradient(8deg,rgba(90,70,50,.018) 0,rgba(90,70,50,.018) 1px,transparent 1px,transparent 5px),
+ #f4f0e8;
+ font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;
 }
-
-.panel {
-    max-width: 900px;
-    margin: 14px auto;
-    padding: 18px;
-    background: rgba(255,255,255,.90);
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.12);
+.output-title{
+ position:absolute;right:28px;top:34px;writing-mode:vertical-rl;text-orientation:upright;
+ font-size:43px;line-height:1.35;letter-spacing:4px;font-weight:normal
 }
-
-.panel h2 {
-    margin: 0 0 12px;
-    font-size: 20px;
+.output-info{
+ position:absolute;right:98px;top:365px;writing-mode:vertical-rl;text-orientation:upright;
+ font-size:20px;line-height:1.55;letter-spacing:2px;white-space:nowrap;
+ display:flex;flex-direction:row;gap:18px
 }
-
-.row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
+.output-info .date-line,.output-info .owner-line{margin:0}
+.output-swords{
+ position:absolute;left:38px;right:155px;top:20px;bottom:20px;
+ display:flex;flex-direction:column;justify-content:flex-start;gap:0
 }
-
-.field {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.output-row{
+ display:flex;flex-direction:row-reverse;align-items:flex-start;
+ height:calc((100% - 20px)/3);width:100%
 }
-
-.field label {
-    white-space: nowrap;
-    font-weight: bold;
+.output-sword{
+ flex:1 1 0;min-width:0;height:100%;position:relative;
+ display:flex;flex-direction:column;align-items:center;
+ white-space:nowrap;writing-mode:vertical-rl;
 }
-
-input[type="text"],
-input[type="date"],
-select,
-textarea {
-    border: 1px solid #cfc7ba;
-    border-radius: 7px;
-    padding: 9px 10px;
-    font-size: 16px;
-    font-family: "Microsoft JhengHei", sans-serif;
-    background: #fff;
+.output-sword .order{font-size:17px;line-height:1.1;margin-bottom:3px}
+.output-sword .name{font-size:19px;line-height:1.1;letter-spacing:1px}
+.output-sword .kiwami-mark{
+ position:absolute;top:112px;left:50%;font-family:"DFKai-SB","KaiTi","STKaiti",serif;
+ font-size:25px;font-weight:bold;color:#a51f67;
+ transform:translateX(-50%) rotate(-8deg) skewX(-12deg);opacity:.93
 }
-
-input[type="text"] { min-width: 180px; }
-input[type="date"] { min-width: 170px; }
-
-button {
-    border: 0;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 16px;
-    cursor: pointer;
-    font-family: "Microsoft JhengHei", sans-serif;
-    background: var(--brown);
-    color: white;
+.output-sword .kiwami-mark:after{
+ content:"";position:absolute;width:40px;height:9px;left:-10px;top:9px;
+ border-top:4px solid #a51f67;border-bottom:2px solid rgba(165,31,103,.6);
+ border-radius:70% 15% 75% 20%;transform:rotate(-19deg);opacity:.72
 }
-
-button:hover { filter: brightness(.92); }
-
-.secondary { background: #777; }
-.green { background: #65785c; }
-.red-button { background: #a55a5a; }
-
-.note {
-    margin: 8px 0 0;
-    color: #777;
-    font-size: 14px;
-    line-height: 1.7;
-}
-
-details summary {
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 17px;
-}
-
-textarea {
-    width: 100%;
-    min-height: 180px;
-    margin-top: 10px;
-    line-height: 1.7;
-    resize: vertical;
-}
-
-.type-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0;
-}
-
-.type-button {
-    background: #ddd;
-    color: #333;
-}
-
-.type-button.selected {
-    background: var(--brown);
-    color: #fff;
-}
-
-#select-area, #move-area {
-    display: none;
-}
-
-.position-option {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    margin: 8px 15px 8px 0;
-    font-size: 16px;
-}
-
-.position-option input {
-    width: 18px;
-    height: 18px;
-}
-
-#display-area {
-    width: 100%;
-    max-width: 1200px;
-    margin: 25px auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-}
-
-.sword-card {
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
-    overflow: hidden;
-}
-
-.sword-image-area {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    background: #eee;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.sword-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.no-image {
-    color: #999;
-    font-size: 14px;
-    text-align: center;
-    padding: 20px;
-}
-
-.sword-number {
-    color: #777;
-    font-size: 14px;
-}
-
-.sword-name {
-    font-size: 20px;
-    margin: 5px 0;
-}
-
-.sword-type {
-    color: var(--brown);
-    font-size: 14px;
-}
-
-.sword-actions {
-    display: flex;
-    gap: 7px;
-    margin-top: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.small-button {
-    padding: 7px 11px;
-    font-size: 14px;
-}
-
-.kiwami-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 14px;
-    margin-left: auto;
-    cursor: pointer;
-}
-
-.kiwami-label input {
-    width: 18px;
-    height: 18px;
-}
-
-#empty-message {
-    text-align: center;
-    color: #888;
-    padding: 40px 10px;
-}
-
-/* =========================
-   顯現帳輸出區
-   ========================= */
-#output-wrap {
-    display: none;
-    margin: 35px auto;
-}
-
-#output-sheet {
-    position: relative;
-    width: 1200px;
-    min-height: 760px;
-    margin: 0 auto;
-    overflow: hidden;
-    padding: 35px 30px 30px 35px;
-    color: #222;
-    background:
-        radial-gradient(circle at 18% 22%, rgba(255,255,255,.75), transparent 22%),
-        radial-gradient(circle at 72% 75%, rgba(170,150,120,.08), transparent 25%),
-        repeating-linear-gradient(8deg, rgba(100,80,60,.018) 0px, rgba(100,80,60,.018) 1px, transparent 1px, transparent 5px),
-        #f4f0e8;
-    font-family: "Microsoft JhengHei", "Microsoft YaHei", sans-serif;
-}
-
-.output-title {
-    position: absolute;
-    right: 24px;
-    top: 42px;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    font-size: 43px;
-    line-height: 1.35;
-    letter-spacing: 4px;
-    font-weight: normal;
-}
-
-.output-info {
-    position: absolute;
-    right: 92px;
-    top: 330px;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    font-size: 21px;
-    line-height: 1.8;
-    letter-spacing: 2px;
-    white-space: nowrap;
-}
-
-.output-info .date-line {
-    margin-right: 5px;
-}
-
-.output-info .owner-line {
-    margin-right: 18px;
-}
-
-.output-swords {
-    height: 690px;
-    padding: 5px 145px 0 5px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 8px 0;
-    writing-mode: vertical-rl;
-    direction: ltr;
-    font-size: 20px;
-    line-height: 1.25;
-}
-
-.output-sword {
-    height: 205px;
-    width: 55px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    white-space: nowrap;
-    writing-mode: vertical-rl;
-    position: relative;
-    margin-left: 1px;
-}
-
-.output-sword .order {
-    font-size: 17px;
-    margin-bottom: 4px;
-}
-
-.output-sword .name {
-    font-size: 20px;
-    letter-spacing: 1px;
-}
-
-.output-sword .kiwami-mark {
-    position: absolute;
-    left: 6px;
-    top: 118px;
-    font-family: "STKaiti", "KaiTi", "DFKai-SB", serif;
-    font-size: 25px;
-    font-weight: bold;
-    color: var(--red);
-    transform: rotate(-8deg) skewX(-12deg);
-    opacity: .92;
-    filter: blur(.15px);
-}
-
-/* 紅墨撇痕：極字後加一筆不規則墨線 */
-.output-sword .kiwami-mark::after {
-    content: "";
-    position: absolute;
-    width: 38px;
-    height: 9px;
-    left: -12px;
-    top: 10px;
-    border-radius: 70% 15% 75% 20%;
-    border-top: 4px solid var(--red);
-    border-bottom: 2px solid rgba(165,31,103,.65);
-    transform: rotate(-19deg);
-    opacity: .75;
-}
-
-/* 小螢幕：編輯介面正常縮放；輸出圖仍維持固定比例後縮小 */
-@media (max-width: 700px) {
-    body { padding: 12px; }
-    .field { width: 100%; }
-    input[type="text"], input[type="date"], select { width: 100%; }
-    .sword-actions { align-items: stretch; }
-    .kiwami-label { margin-left: 0; }
-    #output-sheet {
-        transform-origin: top left;
-    }
+@media(max-width:700px){
+ body{padding:12px}.field{width:100%}input[type=text],input[type=date]{width:100%}
+ .sword-row{grid-template-columns:40px 1fr 58px 58px}.sword-row .name{font-size:16px}
 }
 </style>
 </head>
-
 <body>
-
 <h1>刀劍男士顕現帳</h1>
 <div id="sword-count">目前共有 0 把刀劍</div>
 
-<!-- 審神者資料 -->
 <div class="panel">
-    <h2>① 審神者資料</h2>
-    <div class="row">
-        <div class="field">
-            <label for="owner-name">審神者名</label>
-            <input id="owner-name" type="text" placeholder="請輸入審神者名">
-        </div>
-        <div class="field">
-            <label for="appointment-date">就任日</label>
-            <input id="appointment-date" type="date">
-        </div>
-    </div>
-    <p class="note">
-        這兩項資料會出現在最後產出的顯現帳圖片右側，格式會自動轉成「西曆＋漢字數字」。
-    </p>
+<h2>① 審神者資料</h2>
+<div class="row">
+ <div class="field"><label for="owner-name">審神者名</label><input id="owner-name" type="text" placeholder="請輸入審神者名"></div>
+ <div class="field"><label for="appointment-date">就任日</label><input id="appointment-date" type="date"></div>
+</div>
+<p class="note">產出圖片時會自動轉成「就任日　西暦二〇一七年八月十二日／審神者　○○○」的格式。</p>
 </div>
 
-<!-- 追加 -->
 <div class="panel">
-    <h2>② 追加刀劍</h2>
-    <button onclick="openSelector()">＋ 追加一把刀</button>
-
-    <div id="select-area">
-        <h3>選擇刀種</h3>
-        <div id="type-buttons" class="type-buttons"></div>
-
-        <h3>選擇刀名</h3>
-        <select id="sword-select">
-            <option value="">請先選擇刀種</option>
-        </select>
-
-        <h3>選擇插入位置</h3>
-        <label class="position-option">
-            <input type="radio" name="position" value="last" checked onchange="changePosition()">
-            最後
-        </label>
-        <label class="position-option">
-            <input type="radio" name="position" value="insert" onchange="changePosition()">
-            插入位置
-        </label>
-        <select id="position-select" disabled></select>
-
-        <div style="margin-top:12px;">
-            <button onclick="addSword()">追加這把刀</button>
-            <button class="secondary" onclick="closeSelector()">關閉</button>
-        </div>
-    </div>
+<h2>② 追加刀劍</h2>
+<button onclick="openSelector()">＋ 追加一把刀</button>
+<div id="select-area" style="margin-top:15px">
+ <h3>選擇刀種</h3><div id="type-buttons" class="type-buttons"></div>
+ <h3>選擇刀名</h3><select id="sword-select"><option value="">請先選擇刀種</option></select>
+ <h3>選擇插入位置</h3>
+ <label class="position-option"><input type="radio" name="position" value="last" checked onchange="changePosition()">最後</label>
+ <label class="position-option"><input type="radio" name="position" value="insert" onchange="changePosition()">插入位置</label>
+ <select id="position-select" disabled style="width:100%;margin-top:5px"></select>
+ <div style="margin-top:12px">
+  <label class="position-option" style="margin-top:0"><input id="new-kiwami" type="checkbox" checked> 極</label>
+ </div>
+ <div><button onclick="addSword()">追加這把刀</button> <button class="secondary" onclick="closeSelector()">關閉</button></div>
+</div>
 </div>
 
-<!-- 大量資料管理 -->
 <div class="panel">
-    <details>
-        <summary>③ 刀劍資料管理（不會程式也可以用）</summary>
-        <p class="note">
-            如果未來刀劍超過 100 把，不必一行一行改程式。
-            你可以把完整名單一次貼進下面。每行格式：<b>刀種｜刀名</b>。
-            例如：<b>打刀｜加州清光</b>。按「匯入名單」後，網站就會更新下拉選單。
-        </p>
-        <textarea id="bulk-data" placeholder="短刀｜今剣
-短刀｜愛染国俊
-脇差｜鯰尾藤四郎
-打刀｜加州清光
-太刀｜三日月宗近"></textarea>
-        <div class="row" style="margin-top:10px;">
-            <button class="green" onclick="importSwordData()">匯入／更新刀劍名單</button>
-            <button class="secondary" onclick="loadCurrentDataToText()">把目前名單載入文字框</button>
-            <button class="secondary" onclick="resetDefaultData()">恢復內建名單</button>
-        </div>
-        <p class="note">
-            ※ 此功能會把名單儲存在你目前使用的瀏覽器。若換電腦或清除瀏覽器資料，請先用「目前名單」備份。
-            若你希望更新 GitHub 網站的「內建名單」，之後也可以直接把名單交給我，我幫你整理成完整新版程式碼。
-        </p>
-    </details>
+<details>
+<summary>③ 刀劍資料管理（一次貼上全部名單）</summary>
+<p class="note">格式：<b>刀種｜刀名</b>。一次貼 100～200 把也可以。這裡更新的是「所有訪客看到的網站內建名單」；GitHub 更新後，大家都會看到。</p>
+<textarea id="bulk-data"></textarea>
+<div class="row" style="margin-top:10px">
+ <button class="green" onclick="importSwordData()">匯入／更新刀劍名單</button>
+ <button class="secondary" onclick="loadCurrentDataToText()">載入目前名單</button>
+</div>
+</details>
 </div>
 
-<!-- 移動 -->
 <div id="move-area" class="panel">
-    <h2>移動刀劍</h2>
-    <p id="move-sword-name"></p>
-
-    <label class="position-option">
-        <input type="radio" name="move-position" value="last" checked onchange="changeMovePosition()">
-        最後
-    </label>
-    <label class="position-option">
-        <input type="radio" name="move-position" value="insert" onchange="changeMovePosition()">
-        插入位置
-    </label>
-    <select id="move-position-select" disabled></select>
-
-    <div style="margin-top:12px;">
-        <button onclick="confirmMove()">確定移動</button>
-        <button class="secondary" onclick="closeMoveArea()">取消</button>
-    </div>
+<h2>移動刀劍</h2><p id="move-sword-name"></p>
+<label class="position-option"><input type="radio" name="move-position" value="last" checked onchange="changeMovePosition()">最後</label>
+<label class="position-option"><input type="radio" name="move-position" value="insert" onchange="changeMovePosition()">插入位置</label>
+<select id="move-position-select" disabled style="width:100%"></select>
+<div style="margin-top:12px"><button onclick="confirmMove()">確定移動</button> <button class="secondary" onclick="closeMoveArea()">取消</button></div>
 </div>
 
-<!-- 刀劍清單 -->
 <div id="display-area"></div>
 <div id="empty-message">尚未追加刀劍，請按「＋ 追加一把刀」。</div>
 
-<!-- 產出圖片 -->
-<div class="panel" style="text-align:center;">
-    <h2>④ 產出顯現帳圖片</h2>
-    <p class="note">勾選「極」的刀會在圖片中以紅色毛筆墨痕效果標示。</p>
-    <button onclick="generateImage()">產出顯現帳 PNG 圖片</button>
+<div class="panel" style="text-align:center">
+<h2>④ 產出顯現帳圖片</h2>
+<p class="note">圖片固定為原網站的 1600×900 比例；105 把以內為每列 35 把、共 3 列。超過 105 把後，每增加一個級距就增加 5 欄（40、45、50……），圖片寬度同步增加。</p>
+<button onclick="generateImage()">產出顯現帳 PNG 圖片</button>
 </div>
 
-<!-- 隱藏的輸出畫布 -->
 <div id="output-wrap">
-    <div id="output-sheet">
-        <div class="output-title">刀剣男士顕現帳</div>
-        <div class="output-info">
-            <div class="date-line" id="output-date">就任日　西暦二〇一七年八月十二日</div>
-            <div class="owner-line" id="output-owner">審神者　○○○</div>
-        </div>
-        <div class="output-swords" id="output-swords"></div>
-    </div>
+ <div id="output-sheet">
+  <div class="output-title">刀剣男士顕現帳</div>
+  <div class="output-info">
+   <div class="date-line" id="output-date">就任日　西暦二〇一七年八月十二日</div>
+   <div class="owner-line" id="output-owner">審神者　○○○</div>
+  </div>
+  <div class="output-swords" id="output-swords"></div>
+ </div>
 </div>
 
 <script>
-/* =========================================================
-   內建刀劍資料
-   ★ 以後若你要我幫你更新大量刀劍，我會主要修改這裡。
-   你自己也可以使用上面的「刀劍資料管理」大量貼上。
-   ========================================================= */
+/* 目前公開版本：2026-08-12 時點，共 128 振。
+   來源核對：刀剣乱舞ONLINE Wiki* 2026-08-12 更新資料。
+   童子切安綱 剥落、狐ヶ崎為次等也納入；未實裝的桃太郎祐定不納入。 */
 const DEFAULT_SWORDS = {
-    "短刀": [
-        "今剣",
-        "愛染国俊",
-        "秋田藤四郎",
-        "厚藤四郎"
-    ],
-    "脇差": [
-        "鯰尾藤四郎",
-        "骨喰藤四郎",
-        "堀川国広"
-    ],
-    "打刀": [
-        "加州清光",
-        "歌仙兼定",
-        "陸奥守吉行",
-        "山姥切国広"
-    ],
-    "太刀": [
-        "三日月宗近",
-        "小狐丸",
-        "一期一振",
-        "鶴丸国永"
-    ],
-    "大太刀": [
-        "蛍丸",
-        "太郎太刀",
-        "次郎太刀"
-    ],
-    "槍": [
-        "蜻蛉切",
-        "日本号",
-        "御手杵"
-    ],
-    "薙刀": [
-        "岩融",
-        "巴形薙刀",
-        "静形薙刀"
-    ]
+"短刀":["今剣","平野藤四郎","厚藤四郎","後藤藤四郎","信濃藤四郎","前田藤四郎","秋田藤四郎","博多藤四郎","乱藤四郎","五虎退","薬研藤四郎","包丁藤四郎","愛染国俊","太鼓鐘貞宗","小夜左文字","不動行光","毛利藤四郎","謙信景光","日向正宗","北谷菜切","太閤左文字","京極正宗","九鬼正宗","倶利伽羅江"],
+"脇差":["にっかり青江","鯰尾藤四郎","骨喰藤四郎","物吉貞宗","堀川国広","浦島虎徹","篭手切江","肥前忠広","治金丸","泛塵","火車切"],
+"打刀":["鳴狐","千子村正","亀甲貞宗","宗三左文字","加州清光","大和守安定","歌仙兼定","和泉守兼定","陸奥守吉行","山姥切国広","蜂須賀虎徹","長曽祢虎徹","大倶利伽羅","へし切長谷部","同田貫正国","南泉一文字","山姥切長義","豊前江","南海太郎朝尊","桑名江","水心子正秀","源清麿","松井江","地蔵行平","五月雨江","村雲江","稲葉江","石田正宗","孫六兼元","後家兼光","富田江","大慶直胤","安宅切","二筋樋貞宗","雲重"],
+"太刀":["童子切安綱 剥落","三日月宗近","小狐丸","大典太光世","ソハヤノツルキ","数珠丸恒次","鬼丸国綱","一期一振","大包平","鶯丸","明石国行","燭台切光忠","大般若長光","小竜景光","江雪左文字","山伏国広","髭切","膝丸","獅子王","小烏丸","抜丸","鶴丸国永","小豆長光","千代金丸","山鳥毛","古今伝授の太刀","日光一文字","一文字則宗","姫鶴一文字","福島光忠","笹貫","八丁念仏","実休光忠","雲生","道誉一文字","雲次","面影","古備前信房","三郎国宗","波平行安","狐ヶ崎為次"],
+"大太刀":["石切丸","蛍丸","太郎太刀","次郎太刀","祢々切丸","柏太刀"],
+"槍":["蜻蛉切","日本号","御手杵","大千鳥十文字槍","人間無骨"],
+"薙刀":["岩融","巴形薙刀","静形薙刀"],
+"剣":["白山吉光","七星剣","丙子椒林剣"]
 };
 
 let swords = loadSwordData();
-let selectedType = "";
-let addedSwords = loadAddedSwords();
-let movingIndex = -1;
+let selectedType="", addedSwords=loadAddedSwords(), movingIndex=-1;
 
-function deepCopy(obj) {
-    return JSON.parse(JSON.stringify(obj));
+function copy(o){return JSON.parse(JSON.stringify(o))}
+function loadSwordData(){
+ try{const s=localStorage.getItem("toukenSwordData");if(s)return JSON.parse(s)}catch(e){}
+ return copy(DEFAULT_SWORDS);
 }
-
-function loadSwordData() {
-    try {
-        const saved = localStorage.getItem("toukenSwordData");
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (parsed && typeof parsed === "object") return parsed;
-        }
-    } catch (e) {}
-    return deepCopy(DEFAULT_SWORDS);
+function saveSwordData(){localStorage.setItem("toukenSwordData",JSON.stringify(swords))}
+function loadAddedSwords(){
+ try{const s=localStorage.getItem("toukenAddedSwords");if(s){const a=JSON.parse(s);if(Array.isArray(a))return a}}catch(e){}
+ return [];
 }
+function saveAddedSwords(){localStorage.setItem("toukenAddedSwords",JSON.stringify(addedSwords))}
 
-function saveSwordData() {
-    localStorage.setItem("toukenSwordData", JSON.stringify(swords));
+function initTypeButtons(){
+ const area=document.getElementById("type-buttons");area.innerHTML="";
+ Object.keys(swords).forEach(type=>{
+  const b=document.createElement("button");b.className="type-button";b.textContent=type;
+  b.onclick=()=>selectType(type,b);area.appendChild(b);
+ });
 }
-
-function loadAddedSwords() {
-    try {
-        const saved = localStorage.getItem("toukenAddedSwords");
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed)) return parsed;
-        }
-    } catch (e) {}
-    return [];
+function openSelector(){document.getElementById("select-area").style.display="block";updatePositionList()}
+function closeSelector(){document.getElementById("select-area").style.display="none"}
+function selectType(type,b){
+ selectedType=type;document.querySelectorAll(".type-button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");
+ const s=document.getElementById("sword-select");s.innerHTML='<option value="">請選擇刀名</option>';
+ (swords[type]||[]).forEach(name=>{const o=document.createElement("option");o.value=name;o.textContent=name;s.appendChild(o)})
 }
-
-function saveAddedSwords() {
-    localStorage.setItem("toukenAddedSwords", JSON.stringify(addedSwords));
+function changePosition(){const v=document.querySelector('input[name="position"]:checked').value;document.getElementById("position-select").disabled=v!=="insert"}
+function updatePositionList(){
+ const s=document.getElementById("position-select");s.innerHTML='<option value="">請選擇要插在誰的「前面」</option>';
+ addedSwords.forEach((x,i)=>{const o=document.createElement("option");o.value=i;o.textContent=numberToKanji(i+1)+"　"+x.name+" 的前面";s.appendChild(o)})
 }
-
-function initTypeButtons() {
-    const area = document.getElementById("type-buttons");
-    area.innerHTML = "";
-
-    Object.keys(swords).forEach(type => {
-        const button = document.createElement("button");
-        button.className = "type-button";
-        button.textContent = type;
-        button.onclick = () => selectType(type, button);
-        area.appendChild(button);
-    });
+function addSword(){
+ const name=document.getElementById("sword-select").value;
+ if(!selectedType){alert("請先選擇刀種");return}
+ if(!name){alert("請選擇刀名");return}
+ if(addedSwords.some(x=>x.name===name)){alert("這把刀已經追加過了");return}
+ const obj={name,type:selectedType,kiwami:document.getElementById("new-kiwami").checked};
+ const pos=document.querySelector('input[name="position"]:checked').value;
+ if(pos==="last")addedSwords.push(obj);
+ else{
+  const idx=parseInt(document.getElementById("position-select").value);
+  if(isNaN(idx)){alert("請選擇插入位置");return} addedSwords.splice(idx,0,obj);
+ }
+ saveAddedSwords();renderSwords();updatePositionList();
+ document.querySelector('input[name="position"][value="last"]').checked=true;changePosition();
+ document.getElementById("sword-select").value="";
 }
-
-function openSelector() {
-    document.getElementById("select-area").style.display = "block";
-    updatePositionList();
+function renderSwords(){
+ const d=document.getElementById("display-area");d.innerHTML="";
+ document.getElementById("sword-count").textContent="目前共有 "+addedSwords.length+" 把刀劍";
+ document.getElementById("empty-message").style.display=addedSwords.length?"none":"block";
+ addedSwords.forEach((x,i)=>{
+  const r=document.createElement("div");r.className="sword-row";
+  r.innerHTML=`<div class="num">${numberToKanji(i+1)}</div><div class="name">${esc(x.name)}</div><div class="type">${esc(x.type)}</div>
+  <button class="green" style="padding:7px 9px;font-size:13px" onclick="startMove(${i})">移動</button>
+  <button class="red-button" style="padding:7px 9px;font-size:13px" onclick="deleteSword(${i})">刪除</button>
+  <label class="kiwami-label"><input type="checkbox" ${x.kiwami?"checked":""} onchange="toggleKiwami(${i},this.checked)">極</label>`;
+  // 修正欄位：按鈕及極需要以額外元素呈現
+  r.innerHTML=`<div class="num">${numberToKanji(i+1)}</div><div class="name">${esc(x.name)}</div><div class="type">${esc(x.type)}</div>
+  <button class="green" style="padding:7px 9px;font-size:13px" onclick="startMove(${i})">移動</button>
+  <button class="red-button" style="padding:7px 9px;font-size:13px" onclick="deleteSword(${i})">刪除</button>
+  <label class="kiwami-label"><input type="checkbox" ${x.kiwami?"checked":""} onchange="toggleKiwami(${i},this.checked)">極</label>`;
+  r.style.gridTemplateColumns="48px minmax(0,1fr) 70px 58px 58px 55px";
+  d.appendChild(r);
+ })
 }
-
-function closeSelector() {
-    document.getElementById("select-area").style.display = "none";
+function toggleKiwami(i,v){addedSwords[i].kiwami=v;saveAddedSwords()}
+function startMove(i){
+ movingIndex=i;document.getElementById("move-sword-name").textContent="目前選擇："+numberToKanji(i+1)+"　"+addedSwords[i].name;
+ updateMovePositionList();document.getElementById("move-area").style.display="block";
+ document.querySelector('input[name="move-position"][value="last"]').checked=true;changeMovePosition();
 }
-
-function selectType(type, button) {
-    selectedType = type;
-
-    document.querySelectorAll(".type-button").forEach(btn => {
-        btn.classList.remove("selected");
-    });
-    button.classList.add("selected");
-
-    const select = document.getElementById("sword-select");
-    select.innerHTML = '<option value="">請選擇刀名</option>';
-
-    (swords[type] || []).forEach(sword => {
-        const option = document.createElement("option");
-        option.value = sword;
-        option.textContent = sword;
-        select.appendChild(option);
-    });
+function updateMovePositionList(){
+ const s=document.getElementById("move-position-select");s.innerHTML='<option value="">請選擇要移到誰的「前面」</option>';
+ addedSwords.forEach((x,i)=>{if(i===movingIndex)return;const o=document.createElement("option");o.value=i;o.textContent=numberToKanji(i+1)+"　"+x.name+" 的前面";s.appendChild(o)})
 }
-
-function changePosition() {
-    const selected = document.querySelector('input[name="position"]:checked').value;
-    document.getElementById("position-select").disabled = selected !== "insert";
+function changeMovePosition(){const v=document.querySelector('input[name="move-position"]:checked').value;document.getElementById("move-position-select").disabled=v!=="insert"}
+function confirmMove(){
+ if(movingIndex<0)return;const pos=document.querySelector('input[name="move-position"]:checked').value;const item=addedSwords.splice(movingIndex,1)[0];
+ if(pos==="last")addedSwords.push(item);else{const t=parseInt(document.getElementById("move-position-select").value);if(isNaN(t)){addedSwords.splice(movingIndex,0,item);alert("請選擇新的位置");return}let n=t;if(t>movingIndex)n--;addedSwords.splice(n,0,item)}
+ saveAddedSwords();renderSwords();updatePositionList();closeMoveArea()
 }
+function closeMoveArea(){movingIndex=-1;document.getElementById("move-area").style.display="none"}
+function deleteSword(i){if(!confirm("確定要刪除「"+addedSwords[i].name+"」嗎？"))return;addedSwords.splice(i,1);saveAddedSwords();renderSwords();updatePositionList()}
 
-function updatePositionList() {
-    const select = document.getElementById("position-select");
-    select.innerHTML = '<option value="">請選擇要插在誰的「前面」</option>';
-
-    addedSwords.forEach((sword, index) => {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = numberToKanji(index + 1) + "　" + sword.name + " 的前面";
-        select.appendChild(option);
-    });
+function importSwordData(){
+ const text=document.getElementById("bulk-data").value.trim();if(!text){alert("請先貼上刀劍名單");return}
+ const out={};let ok=0,bad=0;
+ text.split(/\r?\n/).forEach(line0=>{
+  const line=line0.trim();if(!line||line.startsWith("#"))return;
+  const p=line.split(/[｜|,\t]/).map(x=>x.trim()).filter(Boolean);
+  if(p.length<2){bad++;return} if(!out[p[0]])out[p[0]]=[];if(!out[p[0]].includes(p[1])){out[p[0]].push(p[1]);ok++}
+ });
+ if(!ok){alert("格式請使用：刀種｜刀名");return}
+ swords=out;saveSwordData();initTypeButtons();selectedType="";document.getElementById("sword-select").innerHTML='<option value="">請先選擇刀種</option>';
+ alert("網站名單已在本機更新。若要讓所有人看到，請把這份名單更新進 GitHub 的 index.html。\\n成功："+ok+" 把"+(bad?"\\n無法讀取："+bad+" 行":""));
 }
-
-function addSword() {
-    const select = document.getElementById("sword-select");
-    const swordName = select.value;
-
-    if (!selectedType) {
-        alert("請先選擇刀種");
-        return;
-    }
-
-    if (!swordName) {
-        alert("請選擇刀名");
-        return;
-    }
-
-    const alreadyAdded = addedSwords.some(sword => sword.name === swordName);
-    if (alreadyAdded) {
-        alert("這把刀已經追加過了");
-        return;
-    }
-
-    const newSword = {
-        name: swordName,
-        type: selectedType,
-        kiwami: false
-    };
-
-    const position = document.querySelector('input[name="position"]:checked').value;
-
-    if (position === "last") {
-        addedSwords.push(newSword);
-    } else {
-        const insertIndex = parseInt(document.getElementById("position-select").value);
-        if (isNaN(insertIndex)) {
-            alert("請選擇插入位置");
-            return;
-        }
-        addedSwords.splice(insertIndex, 0, newSword);
-    }
-
-    saveAddedSwords();
-    renderSwords();
-    updatePositionList();
-
-    document.querySelector('input[name="position"][value="last"]').checked = true;
-    changePosition();
-    select.value = "";
+function loadCurrentDataToText(){
+ const a=[];Object.keys(swords).forEach(t=>swords[t].forEach(n=>a.push(t+"｜"+n)));document.getElementById("bulk-data").value=a.join("\\n")
 }
-
-function renderSwords() {
-    const display = document.getElementById("display-area");
-    display.innerHTML = "";
-
-    document.getElementById("sword-count").textContent =
-        "目前共有 " + addedSwords.length + " 把刀劍";
-
-    document.getElementById("empty-message").style.display =
-        addedSwords.length ? "none" : "block";
-
-    addedSwords.forEach((sword, index) => {
-        const card = document.createElement("div");
-        card.className = "sword-card";
-
-        const imagePath = "images/" + sword.name + ".jpg";
-
-        card.innerHTML = `
-            <div class="sword-image-area">
-                <img class="sword-image"
-                     src="${imagePath}"
-                     alt="${escapeHtml(sword.name)}"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div class="no-image" style="display:none;">圖片尚未加入</div>
-            </div>
-
-            <div class="sword-number">${numberToKanji(index + 1)}</div>
-            <div class="sword-name">${escapeHtml(sword.name)}</div>
-            <div class="sword-type">${escapeHtml(sword.type)}</div>
-
-            <div class="sword-actions">
-                <button class="small-button green" onclick="startMove(${index})">移動</button>
-                <button class="small-button red-button" onclick="deleteSword(${index})">刪除</button>
-
-                <label class="kiwami-label">
-                    <input type="checkbox"
-                           ${sword.kiwami ? "checked" : ""}
-                           onchange="toggleKiwami(${index}, this.checked)">
-                    極
-                </label>
-            </div>
-        `;
-
-        display.appendChild(card);
-    });
+const KN=["〇","一","二","三","四","五","六","七","八","九"];
+function numberToKanji(n){
+ if(n<10)return KN[n];if(n<20)return "十"+(n%10?KN[n%10]:"");if(n<100)return KN[Math.floor(n/10)]+"十"+(n%10?KN[n%10]:"");
+ if(n<1000)return KN[Math.floor(n/100)]+"百"+(n%100?numberToKanji(n%100):"");return String(n)
 }
-
-function toggleKiwami(index, checked) {
-    addedSwords[index].kiwami = checked;
-    saveAddedSwords();
+function formatDate(v){
+ if(!v)return "";
+ const [y,m,d]=v.split("-").map(Number), ys=String(y).split("").map(x=>KN[Number(x)]).join("");
+ return "西暦"+ys+"年"+numberToKanji(m)+"月"+numberToKanji(d)+"日"
 }
+function esc(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 
-function startMove(index) {
-    movingIndex = index;
-    const sword = addedSwords[index];
-
-    document.getElementById("move-sword-name").textContent =
-        "目前選擇：" + numberToKanji(index + 1) + "　" + sword.name;
-
-    updateMovePositionList();
-
-    document.getElementById("move-area").style.display = "block";
-
-    document.querySelector('input[name="move-position"][value="last"]').checked = true;
-    changeMovePosition();
-
-    window.scrollTo({
-        top: document.getElementById("move-area").offsetTop - 20,
-        behavior: "smooth"
-    });
+function outputColumns(count){
+ if(count<=105)return 35;
+ return 35+Math.ceil((count-105)/15)*5;
 }
-
-function updateMovePositionList() {
-    const select = document.getElementById("move-position-select");
-    select.innerHTML = '<option value="">請選擇要移到誰的「前面」</option>';
-
-    addedSwords.forEach((sword, index) => {
-        if (index === movingIndex) return;
-
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = numberToKanji(index + 1) + "　" + sword.name + " 的前面";
-        select.appendChild(option);
-    });
+function buildOutput(){
+ const owner=document.getElementById("owner-name").value.trim(),date=document.getElementById("appointment-date").value;
+ if(!owner){alert("請先填寫「審神者名」");return false}
+ if(!date){alert("請先填寫「就任日」");return false}
+ if(!addedSwords.length){alert("請先追加刀劍");return false}
+ document.getElementById("output-owner").textContent="審神者　"+owner;
+ document.getElementById("output-date").textContent="就任日　"+formatDate(date);
+ const cols=outputColumns(addedSwords.length);
+ const baseCol=37.5;
+ const width=Math.round(1600+(cols-35)*baseCol);
+ const sheet=document.getElementById("output-sheet");
+ sheet.style.width=width+"px";
+ const area=document.getElementById("output-swords");area.innerHTML="";
+ area.style.left="38px";area.style.right="155px";
+ for(let row=0;row<3;row++){
+  const rd=document.createElement("div");rd.className="output-row";
+  for(let j=0;j<cols;j++){
+   const index=row*cols+j;if(index>=addedSwords.length)break;
+   const x=addedSwords[index],item=document.createElement("div");item.className="output-sword";
+   item.innerHTML=`<span class="order">${numberToKanji(index+1)}</span><span class="name">${esc(x.name)}</span>${x.kiwami?'<span class="kiwami-mark">極</span>':""}`;
+   rd.appendChild(item)
+  }
+  area.appendChild(rd)
+ }
+ return true
 }
-
-function changeMovePosition() {
-    const selected = document.querySelector('input[name="move-position"]:checked').value;
-    document.getElementById("move-position-select").disabled = selected !== "insert";
+async function generateImage(){
+ if(!buildOutput())return;
+ const wrap=document.getElementById("output-wrap");wrap.style.display="block";
+ await new Promise(r=>setTimeout(r,350));
+ try{
+  const sheet=document.getElementById("output-sheet");
+  const canvas=await html2canvas(sheet,{scale:2,backgroundColor:"#f4f0e8",logging:false});
+  const owner=document.getElementById("owner-name").value.trim().replace(/[\\/:*?"<>|]/g,"_")||"審神者";
+  const a=document.createElement("a");a.download="刀劍男士顕現帳_"+owner+".png";a.href=canvas.toDataURL("image/png");a.click();
+  alert("圖片已產出！");
+ }catch(e){console.error(e);alert("產出圖片時發生問題，請確認網路正常後再試一次。")}
 }
-
-function confirmMove() {
-    if (movingIndex < 0) return;
-
-    const position = document.querySelector('input[name="move-position"]:checked').value;
-    const movingSword = addedSwords.splice(movingIndex, 1)[0];
-
-    if (position === "last") {
-        addedSwords.push(movingSword);
-    } else {
-        const targetIndex = parseInt(document.getElementById("move-position-select").value);
-
-        if (isNaN(targetIndex)) {
-            addedSwords.splice(movingIndex, 0, movingSword);
-            alert("請選擇新的位置");
-            return;
-        }
-
-        let newIndex = targetIndex;
-        if (targetIndex > movingIndex) newIndex--;
-
-        addedSwords.splice(newIndex, 0, movingSword);
-    }
-
-    saveAddedSwords();
-    renderSwords();
-    updatePositionList();
-    closeMoveArea();
-}
-
-function closeMoveArea() {
-    movingIndex = -1;
-    document.getElementById("move-area").style.display = "none";
-}
-
-function deleteSword(index) {
-    const sword = addedSwords[index];
-
-    if (!confirm("確定要刪除「" + sword.name + "」嗎？")) return;
-
-    addedSwords.splice(index, 1);
-    saveAddedSwords();
-    renderSwords();
-    updatePositionList();
-}
-
-function importSwordData() {
-    const text = document.getElementById("bulk-data").value.trim();
-
-    if (!text) {
-        alert("請先貼上刀劍名單。");
-        return;
-    }
-
-    const newData = {};
-    const lines = text.split(/\r?\n/);
-
-    let valid = 0;
-    let invalid = 0;
-
-    lines.forEach(rawLine => {
-        const line = rawLine.trim();
-
-        if (!line || line.startsWith("#")) return;
-
-        const parts = line.split(/[｜|,，\t]/).map(x => x.trim()).filter(Boolean);
-
-        if (parts.length < 2) {
-            invalid++;
-            return;
-        }
-
-        const type = parts[0];
-        const name = parts[1];
-
-        if (!newData[type]) newData[type] = [];
-        if (!newData[type].includes(name)) {
-            newData[type].push(name);
-            valid++;
-        }
-    });
-
-    if (!valid) {
-        alert("沒有讀到有效資料。\n請使用：刀種｜刀名");
-        return;
-    }
-
-    swords = newData;
-    saveSwordData();
-    initTypeButtons();
-
-    selectedType = "";
-    document.getElementById("sword-select").innerHTML =
-        '<option value="">請先選擇刀種</option>';
-
-    alert(
-        "刀劍名單更新完成！\n" +
-        "成功讀取：" + valid + " 把\n" +
-        (invalid ? "無法讀取：" + invalid + " 行" : "")
-    );
-}
-
-function loadCurrentDataToText() {
-    const lines = [];
-
-    Object.keys(swords).forEach(type => {
-        swords[type].forEach(name => {
-            lines.push(type + "｜" + name);
-        });
-    });
-
-    document.getElementById("bulk-data").value = lines.join("\n");
-}
-
-function resetDefaultData() {
-    if (!confirm("確定要恢復內建刀劍名單嗎？")) return;
-
-    swords = deepCopy(DEFAULT_SWORDS);
-    saveSwordData();
-    initTypeButtons();
-
-    document.getElementById("bulk-data").value = "";
-    selectedType = "";
-    document.getElementById("sword-select").innerHTML =
-        '<option value="">請先選擇刀種</option>';
-
-    alert("已恢復內建名單。");
-}
-
-/* =========================================================
-   漢字數字
-   ========================================================= */
-const KANJI_NUMBERS = ["〇","一","二","三","四","五","六","七","八","九"];
-
-function numberToKanji(num) {
-    if (num <= 0) return "〇";
-    if (num < 10) return KANJI_NUMBERS[num];
-    if (num < 100) {
-        const tens = Math.floor(num / 10);
-        const ones = num % 10;
-        return (tens === 1 ? "十" : KANJI_NUMBERS[tens] + "十") +
-               (ones ? KANJI_NUMBERS[ones] : "");
-    }
-    if (num < 1000) {
-        const hundreds = Math.floor(num / 100);
-        const rest = num % 100;
-        return KANJI_NUMBERS[hundreds] + "百" + (rest ? numberToKanji(rest) : "");
-    }
-    return String(num);
-}
-
-/* 日期：輸出成「西暦二〇一七年八月十二日」 */
-function formatJapaneseDate(dateValue) {
-    if (!dateValue) return "西暦二〇一七年八月十二日";
-
-    const [year, month, day] = dateValue.split("-").map(Number);
-
-    const yearText = String(year).split("").map(d => KANJI_NUMBERS[Number(d)]).join("");
-    return "西暦" + yearText + "年" +
-           numberToKanji(month) + "月" +
-           numberToKanji(day) + "日";
-}
-
-function escapeHtml(text) {
-    return String(text)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
-/* =========================================================
-   產出圖片
-   ========================================================= */
-async function generateImage() {
-    const owner = document.getElementById("owner-name").value.trim();
-    const date = document.getElementById("appointment-date").value;
-
-    if (!owner) {
-        alert("請先填寫「審神者名」。");
-        document.getElementById("owner-name").focus();
-        return;
-    }
-
-    if (!date) {
-        alert("請先填寫「就任日」。");
-        document.getElementById("appointment-date").focus();
-        return;
-    }
-
-    if (!addedSwords.length) {
-        alert("目前沒有刀劍，請先追加刀劍。");
-        return;
-    }
-
-    document.getElementById("output-owner").textContent =
-        "審神者　" + owner;
-
-    document.getElementById("output-date").textContent =
-        "就任日　" + formatJapaneseDate(date);
-
-    const output = document.getElementById("output-swords");
-    output.innerHTML = "";
-
-    addedSwords.forEach((sword, index) => {
-        const item = document.createElement("div");
-        item.className = "output-sword";
-
-        item.innerHTML = `
-            <span class="order">${numberToKanji(index + 1)}</span>
-            <span class="name">${escapeHtml(sword.name)}</span>
-            ${sword.kiwami ? '<span class="kiwami-mark">極</span>' : ''}
-        `;
-
-        output.appendChild(item);
-    });
-
-    const wrap = document.getElementById("output-wrap");
-    wrap.style.display = "block";
-
-    // 讓瀏覽器先完成直排排版
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    try {
-        const canvas = await html2canvas(document.getElementById("output-sheet"), {
-            scale: 2,
-            backgroundColor: "#f4f0e8",
-            useCORS: true,
-            logging: false
-        });
-
-        const link = document.createElement("a");
-        const safeOwner = owner.replace(/[\\/:*?"<>|]/g, "_") || "審神者";
-        link.download = "刀劍男士顕現帳_" + safeOwner + ".png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        alert("圖片已產出！");
-    } catch (error) {
-        console.error(error);
-        alert("產出圖片時發生問題。\n請確認網路正常後再試一次。");
-    }
-}
-
-/* =========================================================
-   啟動
-   ========================================================= */
-initTypeButtons();
-renderSwords();
+initTypeButtons();renderSwords();
 </script>
-
 </body>
 </html>
