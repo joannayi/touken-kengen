@@ -32,6 +32,8 @@
 
             text-align: center;
 
+            margin-bottom: 30px;
+
         }
 
 
@@ -39,7 +41,7 @@
 
             text-align: center;
 
-            margin: 30px 0;
+            margin-bottom: 25px;
 
         }
 
@@ -90,6 +92,15 @@
         }
 
 
+        .step-title {
+
+            margin-top: 20px;
+
+            margin-bottom: 12px;
+
+        }
+
+
         .types {
 
             display: flex;
@@ -97,8 +108,6 @@
             flex-wrap: wrap;
 
             gap: 10px;
-
-            margin-bottom: 20px;
 
         }
 
@@ -130,6 +139,39 @@
             font-size: 16px;
 
             margin-bottom: 15px;
+
+            box-sizing: border-box;
+
+        }
+
+
+        .position-option {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin: 12px 0;
+
+            font-size: 16px;
+
+        }
+
+
+        .position-option input {
+
+            width: 18px;
+
+            height: 18px;
+
+        }
+
+
+        #position-select {
+
+            margin-top: 8px;
 
         }
 
@@ -192,6 +234,16 @@
 
         }
 
+
+        .close-button {
+
+            background-color: #999;
+
+            margin-left: 10px;
+
+        }
+
+
     </style>
 
 </head>
@@ -210,6 +262,7 @@
         </button>
 
     </div>
+
 
 
     <div id="select-area">
@@ -273,16 +326,87 @@
         </div>
 
 
-        <h2>② 選擇刀名</h2>
+
+        <h2 class="step-title">
+            ② 選擇刀名
+        </h2>
 
 
         <select id="sword-select">
+
 
             <option value="">
                 請先選擇刀種
             </option>
 
+
         </select>
+
+
+
+        <h2 class="step-title">
+            ③ 選擇插入位置
+        </h2>
+
+
+
+        <!-- 最後 -->
+
+
+        <label class="position-option">
+
+
+            <input
+                type="radio"
+                name="position"
+                value="last"
+                checked
+                onchange="changePosition()">
+
+
+            <span>
+                最後
+            </span>
+
+
+        </label>
+
+
+
+        <!-- 指定位置 -->
+
+
+        <label class="position-option">
+
+
+            <input
+                type="radio"
+                name="position"
+                value="insert"
+                onchange="changePosition()">
+
+
+            <span>
+                插入位置
+            </span>
+
+
+        </label>
+
+
+
+        <select
+            id="position-select"
+            disabled>
+
+
+            <option value="">
+                請選擇插入位置
+            </option>
+
+
+        </select>
+
 
 
         <br>
@@ -293,7 +417,17 @@
         </button>
 
 
+        <button
+            class="close-button"
+            onclick="closeSelector()">
+
+            關閉
+
+        </button>
+
+
     </div>
+
 
 
     <div id="display-area"></div>
@@ -301,72 +435,6 @@
 
 
     <script>
-
-
-        /*
-         * =========================
-         * 刀劍固定順序
-         * =========================
-         *
-         * 這裡先放目前測試用的刀劍。
-         *
-         * 之後我們會把完整資料整理好。
-         *
-         */
-
-
-        const swordOrder = [
-
-            "三日月宗近",
-
-            "小狐丸",
-
-            "一期一振",
-
-            "鶴丸国永",
-
-            "加州清光",
-
-            "歌仙兼定",
-
-            "陸奥守吉行",
-
-            "山姥切国広",
-
-            "今剣",
-
-            "愛染国俊",
-
-            "秋田藤四郎",
-
-            "厚藤四郎",
-
-            "鯰尾藤四郎",
-
-            "骨喰藤四郎",
-
-            "堀川国広",
-
-            "蛍丸",
-
-            "太郎太刀",
-
-            "次郎太刀",
-
-            "蜻蛉切",
-
-            "日本号",
-
-            "御手杵",
-
-            "岩融",
-
-            "巴形薙刀",
-
-            "静形薙刀"
-
-        ];
-
 
 
         /*
@@ -478,7 +546,7 @@
 
         /*
          * =========================
-         * 已經追加的刀
+         * 已追加刀劍
          * =========================
          */
 
@@ -500,6 +568,28 @@
             document
                 .getElementById("select-area")
                 .style.display = "block";
+
+
+            updatePositionList();
+
+
+        }
+
+
+
+        /*
+         * =========================
+         * 關閉追加區
+         * =========================
+         */
+
+
+        function closeSelector() {
+
+
+            document
+                .getElementById("select-area")
+                .style.display = "none";
 
 
         }
@@ -564,6 +654,102 @@
 
             });
 
+
+        }
+
+
+
+        /*
+         * =========================
+         * 切換插入方式
+         * =========================
+         */
+
+
+        function changePosition() {
+
+
+            const selected =
+                document.querySelector(
+                    'input[name="position"]:checked'
+                ).value;
+
+
+            const positionSelect =
+                document.getElementById(
+                    "position-select"
+                );
+
+
+            if (selected === "last") {
+
+
+                positionSelect.disabled = true;
+
+
+            } else {
+
+
+                positionSelect.disabled = false;
+
+
+            }
+
+
+        }
+
+
+
+        /*
+         * =========================
+         * 更新插入位置下拉選單
+         * =========================
+         */
+
+
+        function updatePositionList() {
+
+
+            const positionSelect =
+                document.getElementById(
+                    "position-select"
+                );
+
+
+            positionSelect.innerHTML =
+                '<option value="">請選擇插入位置</option>';
+
+
+            addedSwords.forEach(
+                function(sword, index) {
+
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value = index;
+
+
+                    option.textContent =
+                        (index + 1)
+                        + ". "
+                        + sword.name
+                        + "　"
+                        + sword.type;
+
+
+                    positionSelect.appendChild(
+                        option
+                    );
+
+
+                }
+            );
+
+
         }
 
 
@@ -590,82 +776,178 @@
 
             if (!selectedType) {
 
-                alert("請先選擇刀種");
+
+                alert(
+                    "請先選擇刀種"
+                );
+
 
                 return;
+
 
             }
 
 
             if (!swordName) {
 
-                alert("請選擇刀名");
+
+                alert(
+                    "請選擇刀名"
+                );
+
 
                 return;
+
 
             }
 
 
+
             /*
-             * 防止同一把刀重複加入
+             * 防止重複追加
              */
 
 
             const alreadyAdded =
-                addedSwords.some(function(sword) {
+                addedSwords.some(
+                    function(sword) {
 
-                    return sword.name === swordName;
+                        return sword.name
+                            === swordName;
 
-                });
+                    }
+                );
 
 
             if (alreadyAdded) {
 
-                alert("這把刀已經追加過了");
+
+                alert(
+                    "這把刀已經追加過了"
+                );
+
 
                 return;
+
 
             }
 
 
+
             /*
-             * 把刀加入清單
+             * 建立新刀資料
              */
 
 
-            addedSwords.push({
+            const newSword = {
+
 
                 name: swordName,
 
                 type: selectedType
 
-            });
+
+            };
+
 
 
             /*
-             * 按照固定順序排列
+             * 判斷放置位置
              */
 
 
-            addedSwords.sort(function(a, b) {
+            const position =
+                document.querySelector(
+                    'input[name="position"]:checked'
+                ).value;
 
 
-                return (
-                    swordOrder.indexOf(a.name)
-                    -
-                    swordOrder.indexOf(b.name)
+
+            if (position === "last") {
+
+
+                addedSwords.push(
+                    newSword
                 );
 
 
-            });
+            } else {
+
+
+                const positionSelect =
+                    document.getElementById(
+                        "position-select"
+                    );
+
+
+                const insertIndex =
+                    parseInt(
+                        positionSelect.value
+                    );
+
+
+                if (
+                    isNaN(insertIndex)
+                ) {
+
+
+                    alert(
+                        "請選擇插入位置"
+                    );
+
+
+                    return;
+
+
+                }
+
+
+                addedSwords.splice(
+                    insertIndex,
+                    0,
+                    newSword
+                );
+
+
+            }
+
 
 
             /*
-             * 重新顯示
+             * 更新畫面
              */
 
 
             renderSwords();
+
+
+            /*
+             * 更新插入位置清單
+             */
+
+
+            updatePositionList();
+
+
+            /*
+             * 回到「最後」
+             */
+
+
+            document.querySelector(
+                'input[name="position"][value="last"]'
+            ).checked = true;
+
+
+            changePosition();
+
+
+            /*
+             * 清除刀名選擇
+             */
+
+
+            select.value = "";
 
 
         }
@@ -674,7 +956,7 @@
 
         /*
          * =========================
-         * 顯示所有已追加刀劍
+         * 顯示刀劍
          * =========================
          */
 
@@ -708,21 +990,31 @@
                     card.innerHTML = `
 
                         <div class="sword-number">
+
                             ${index + 1}.
+
                         </div>
+
 
                         <div class="sword-name">
+
                             ${sword.name}
+
                         </div>
 
+
                         <div class="sword-type">
+
                             ${sword.type}
+
                         </div>
 
                     `;
 
 
-                    display.appendChild(card);
+                    display.appendChild(
+                        card
+                    );
 
 
                 }
