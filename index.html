@@ -1,226 +1,529 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>刀劍男士顕現帳</title>
 
+
     <style>
+
         body {
+
             font-family: sans-serif;
+
             background-color: #f5f1e8;
+
             color: #333;
+
             margin: 0;
+
             padding: 20px;
+
         }
+
 
         h1 {
+
             text-align: center;
+
         }
+
 
         .add-area {
+
             text-align: center;
+
             margin: 30px 0;
+
         }
+
 
         button {
-            padding: 12px 24px;
-            font-size: 18px;
+
+            padding: 12px 20px;
+
+            font-size: 16px;
+
             cursor: pointer;
+
             border: none;
+
             border-radius: 8px;
+
             background-color: #8b6f47;
+
             color: white;
+
         }
+
 
         button:hover {
+
             background-color: #6f5635;
+
         }
+
 
         #select-area {
+
             display: none;
+
             max-width: 600px;
+
             margin: 20px auto;
+
             padding: 20px;
+
             background-color: white;
+
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.15);
+
         }
+
 
         .types {
+
             display: flex;
+
             flex-wrap: wrap;
+
             gap: 10px;
+
             margin-bottom: 20px;
+
         }
+
 
         .type-button {
+
             background-color: #ddd;
+
             color: #333;
+
         }
+
 
         .type-button.selected {
+
             background-color: #8b6f47;
+
             color: white;
+
         }
+
 
         select {
+
             width: 100%;
+
             padding: 12px;
+
             font-size: 16px;
+
             margin-bottom: 15px;
+
         }
+
 
         #display-area {
-            display: flex;
-            flex-wrap: wrap;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+
             gap: 20px;
-            justify-content: center;
+
             margin-top: 30px;
+
         }
 
+
         .sword-card {
-            width: 180px;
-            min-height: 100px;
+
             background-color: white;
+
             border-radius: 12px;
+
             padding: 20px;
+
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.15);
+
             box-sizing: border-box;
+
+            min-height: 120px;
+
         }
+
+
+        .sword-number {
+
+            font-size: 14px;
+
+            color: #777;
+
+        }
+
+
+        .sword-name {
+
+            font-size: 20px;
+
+            margin: 8px 0;
+
+        }
+
+
+        .sword-type {
+
+            color: #8b6f47;
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
     <h1>刀劍男士顕現帳</h1>
 
+
     <div class="add-area">
-        <button onclick="openSelector()">＋ 追加</button>
+
+        <button onclick="openSelector()">
+            ＋ 追加
+        </button>
+
     </div>
+
 
     <div id="select-area">
 
+
         <h2>① 選擇刀種</h2>
+
 
         <div class="types">
 
-            <button class="type-button" onclick="selectType('短刀', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('短刀', this)">
                 短刀
             </button>
 
-            <button class="type-button" onclick="selectType('脇差', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('脇差', this)">
                 脇差
             </button>
 
-            <button class="type-button" onclick="selectType('打刀', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('打刀', this)">
                 打刀
             </button>
 
-            <button class="type-button" onclick="selectType('太刀', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('太刀', this)">
                 太刀
             </button>
 
-            <button class="type-button" onclick="selectType('大太刀', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('大太刀', this)">
                 大太刀
             </button>
 
-            <button class="type-button" onclick="selectType('槍', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('槍', this)">
                 槍
             </button>
 
-            <button class="type-button" onclick="selectType('薙刀', this)">
+
+            <button
+                class="type-button"
+                onclick="selectType('薙刀', this)">
                 薙刀
             </button>
 
+
         </div>
+
 
         <h2>② 選擇刀名</h2>
 
+
         <select id="sword-select">
-            <option value="">請先選擇刀種</option>
+
+            <option value="">
+                請先選擇刀種
+            </option>
+
         </select>
+
 
         <br>
 
-        <button onclick="addSword()">追加這把刀</button>
+
+        <button onclick="addSword()">
+            追加這把刀
+        </button>
+
 
     </div>
+
 
     <div id="display-area"></div>
 
 
+
     <script>
+
+
+        /*
+         * =========================
+         * 刀劍固定順序
+         * =========================
+         *
+         * 這裡先放目前測試用的刀劍。
+         *
+         * 之後我們會把完整資料整理好。
+         *
+         */
+
+
+        const swordOrder = [
+
+            "三日月宗近",
+
+            "小狐丸",
+
+            "一期一振",
+
+            "鶴丸国永",
+
+            "加州清光",
+
+            "歌仙兼定",
+
+            "陸奥守吉行",
+
+            "山姥切国広",
+
+            "今剣",
+
+            "愛染国俊",
+
+            "秋田藤四郎",
+
+            "厚藤四郎",
+
+            "鯰尾藤四郎",
+
+            "骨喰藤四郎",
+
+            "堀川国広",
+
+            "蛍丸",
+
+            "太郎太刀",
+
+            "次郎太刀",
+
+            "蜻蛉切",
+
+            "日本号",
+
+            "御手杵",
+
+            "岩融",
+
+            "巴形薙刀",
+
+            "静形薙刀"
+
+        ];
+
+
+
+        /*
+         * =========================
+         * 刀種與刀名
+         * =========================
+         */
+
 
         const swords = {
 
+
             "短刀": [
+
                 "今剣",
+
                 "愛染国俊",
+
                 "秋田藤四郎",
+
                 "厚藤四郎"
+
             ],
+
 
             "脇差": [
+
                 "鯰尾藤四郎",
+
                 "骨喰藤四郎",
+
                 "堀川国広"
+
             ],
+
 
             "打刀": [
+
                 "加州清光",
+
                 "歌仙兼定",
+
                 "陸奥守吉行",
+
                 "山姥切国広"
+
             ],
+
 
             "太刀": [
+
                 "三日月宗近",
+
                 "小狐丸",
+
                 "一期一振",
+
                 "鶴丸国永"
+
             ],
+
 
             "大太刀": [
+
                 "蛍丸",
+
                 "太郎太刀",
+
                 "次郎太刀"
+
             ],
+
 
             "槍": [
+
                 "蜻蛉切",
+
                 "日本号",
+
                 "御手杵"
+
             ],
 
+
             "薙刀": [
+
                 "岩融",
+
                 "巴形薙刀",
+
                 "静形薙刀"
+
             ]
 
         };
 
 
+
+        /*
+         * =========================
+         * 目前選擇的刀種
+         * =========================
+         */
+
+
         let selectedType = "";
+
+
+
+        /*
+         * =========================
+         * 已經追加的刀
+         * =========================
+         */
+
+
+        let addedSwords = [];
+
+
+
+        /*
+         * =========================
+         * 開啟追加區
+         * =========================
+         */
 
 
         function openSelector() {
 
-            document.getElementById("select-area").style.display = "block";
+
+            document
+                .getElementById("select-area")
+                .style.display = "block";
+
 
         }
 
 
+
+        /*
+         * =========================
+         * 選擇刀種
+         * =========================
+         */
+
+
         function selectType(type, button) {
+
 
             selectedType = type;
 
 
             const buttons =
-                document.querySelectorAll(".type-button");
+                document.querySelectorAll(
+                    ".type-button"
+                );
+
 
             buttons.forEach(function(btn) {
 
@@ -233,7 +536,9 @@
 
 
             const select =
-                document.getElementById("sword-select");
+                document.getElementById(
+                    "sword-select"
+                );
 
 
             select.innerHTML =
@@ -242,23 +547,42 @@
 
             swords[type].forEach(function(sword) {
 
+
                 const option =
-                    document.createElement("option");
+                    document.createElement(
+                        "option"
+                    );
+
 
                 option.value = sword;
+
                 option.textContent = sword;
 
+
                 select.appendChild(option);
+
 
             });
 
         }
 
 
+
+        /*
+         * =========================
+         * 追加刀劍
+         * =========================
+         */
+
+
         function addSword() {
 
+
             const select =
-                document.getElementById("sword-select");
+                document.getElementById(
+                    "sword-select"
+                );
+
 
             const swordName =
                 select.value;
@@ -282,27 +606,135 @@
             }
 
 
-            const display =
-                document.getElementById("display-area");
+            /*
+             * 防止同一把刀重複加入
+             */
 
 
-            const card =
-                document.createElement("div");
+            const alreadyAdded =
+                addedSwords.some(function(sword) {
 
-            card.className = "sword-card";
+                    return sword.name === swordName;
 
-
-            card.innerHTML = `
-                <h3>${swordName}</h3>
-                <p>${selectedType}</p>
-            `;
+                });
 
 
-            display.appendChild(card);
+            if (alreadyAdded) {
+
+                alert("這把刀已經追加過了");
+
+                return;
+
+            }
+
+
+            /*
+             * 把刀加入清單
+             */
+
+
+            addedSwords.push({
+
+                name: swordName,
+
+                type: selectedType
+
+            });
+
+
+            /*
+             * 按照固定順序排列
+             */
+
+
+            addedSwords.sort(function(a, b) {
+
+
+                return (
+                    swordOrder.indexOf(a.name)
+                    -
+                    swordOrder.indexOf(b.name)
+                );
+
+
+            });
+
+
+            /*
+             * 重新顯示
+             */
+
+
+            renderSwords();
+
 
         }
 
+
+
+        /*
+         * =========================
+         * 顯示所有已追加刀劍
+         * =========================
+         */
+
+
+        function renderSwords() {
+
+
+            const display =
+                document.getElementById(
+                    "display-area"
+                );
+
+
+            display.innerHTML = "";
+
+
+            addedSwords.forEach(
+                function(sword, index) {
+
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "sword-card";
+
+
+                    card.innerHTML = `
+
+                        <div class="sword-number">
+                            ${index + 1}.
+                        </div>
+
+                        <div class="sword-name">
+                            ${sword.name}
+                        </div>
+
+                        <div class="sword-type">
+                            ${sword.type}
+                        </div>
+
+                    `;
+
+
+                    display.appendChild(card);
+
+
+                }
+            );
+
+
+        }
+
+
     </script>
 
+
 </body>
+
 </html>
