@@ -1,1820 +1,1047 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>刀劍男士顕現帳</title>
-
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        body {
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                "Microsoft JhengHei",
-                sans-serif;
-
-            background-color: #f5f1e8;
-
-            color: #333;
-
-            margin: 0;
-
-            padding: 20px;
-
-        }
-
-
-        h1 {
-
-            text-align: center;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        /* =========================
-           數量
-           ========================= */
-
-
-        #sword-count {
-
-            text-align: center;
-
-            color: #777;
-
-            margin-bottom: 25px;
-
-        }
-
-
-
-        /* =========================
-           追加按鈕
-           ========================= */
-
-
-        .add-area {
-
-            text-align: center;
-
-            margin-bottom: 25px;
-
-        }
-
-
-        button {
-
-            padding: 10px 18px;
-
-            font-size: 16px;
-
-            cursor: pointer;
-
-            border: none;
-
-            border-radius: 8px;
-
-            background-color: #8b6f47;
-
-            color: white;
-
-        }
-
-
-        button:hover {
-
-            background-color: #6f5635;
-
-        }
-
-
-
-        /* =========================
-           追加區
-           ========================= */
-
-
-        #select-area {
-
-            display: none;
-
-            max-width: 600px;
-
-            margin: 20px auto;
-
-            padding: 20px;
-
-            background-color: white;
-
-            border-radius: 12px;
-
-            box-shadow:
-                0 2px 8px rgba(0,0,0,0.15);
-
-        }
-
-
-        .step-title {
-
-            margin-top: 20px;
-
-            margin-bottom: 12px;
-
-        }
-
-
-        .types {
-
-            display: flex;
-
-            flex-wrap: wrap;
-
-            gap: 10px;
-
-        }
-
-
-        .type-button {
-
-            background-color: #ddd;
-
-            color: #333;
-
-        }
-
-
-        .type-button.selected {
-
-            background-color: #8b6f47;
-
-            color: white;
-
-        }
-
-
-        select {
-
-            width: 100%;
-
-            padding: 12px;
-
-            font-size: 16px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .position-option {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            margin: 12px 0;
-
-            font-size: 16px;
-
-        }
-
-
-        .position-option input {
-
-            width: 18px;
-
-            height: 18px;
-
-        }
-
-
-        #position-select {
-
-            margin-top: 5px;
-
-        }
-
-
-
-        /* =========================
-           圖片顯示區
-           ========================= */
-
-
-        #display-area {
-
-            width: 100%;
-
-            max-width: 1200px;
-
-            margin: 30px auto;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(auto-fit, minmax(220px, 1fr));
-
-            gap: 20px;
-
-        }
-
-
-
-        /* =========================
-           每把刀
-           ========================= */
-
-
-        .sword-card {
-
-            background-color: white;
-
-            border-radius: 12px;
-
-            padding: 12px;
-
-            box-shadow:
-                0 2px 8px rgba(0,0,0,0.15);
-
-            overflow: hidden;
-
-        }
-
-
-        .sword-image-area {
-
-            width: 100%;
-
-            aspect-ratio: 3 / 4;
-
-            background-color: #eee;
-
-            border-radius: 8px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            overflow: hidden;
-
-            margin-bottom: 10px;
-
-        }
-
-
-        .sword-image {
-
-            width: 100%;
-
-            height: 100%;
-
-            object-fit: contain;
-
-        }
-
-
-        .no-image {
-
-            color: #999;
-
-            font-size: 14px;
-
-            text-align: center;
-
-            padding: 20px;
-
-        }
-
-
-        .sword-number {
-
-            color: #777;
-
-            font-size: 14px;
-
-        }
-
-
-        .sword-name {
-
-            font-size: 20px;
-
-            margin: 5px 0;
-
-        }
-
-
-        .sword-type {
-
-            color: #8b6f47;
-
-        }
-
-
-        .sword-actions {
-
-            display: flex;
-
-            gap: 8px;
-
-            margin-top: 12px;
-
-        }
-
-
-        .small-button {
-
-            padding: 7px 12px;
-
-            font-size: 14px;
-
-        }
-
-
-        .move-button {
-
-            background-color: #6b7a5c;
-
-        }
-
-
-        .delete-button {
-
-            background-color: #a55a5a;
-
-        }
-
-
-
-        /* =========================
-           移動區
-           ========================= */
-
-
-        #move-area {
-
-            display: none;
-
-            max-width: 600px;
-
-            margin: 20px auto;
-
-            padding: 20px;
-
-            background-color: #fff8e8;
-
-            border: 2px solid #d6bd8a;
-
-            border-radius: 12px;
-
-        }
-
-
-        .move-title {
-
-            margin-top: 0;
-
-        }
-
-
-        .close-button {
-
-            background-color: #999;
-
-            margin-left: 8px;
-
-        }
-
-
-
-        /* =========================
-           手機畫面
-           ========================= */
-
-
-        @media (max-width: 600px) {
-
-            body {
-
-                padding: 12px;
-
-            }
-
-
-            #display-area {
-
-                grid-template-columns:
-                    repeat(2, 1fr);
-
-                gap: 10px;
-
-            }
-
-
-            .sword-card {
-
-                padding: 8px;
-
-            }
-
-
-            .sword-name {
-
-                font-size: 16px;
-
-            }
-
-
-            .sword-actions {
-
-                flex-direction: column;
-
-            }
-
-
-            .small-button {
-
-                width: 100%;
-
-            }
-
-        }
-
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>刀劍男士顕現帳</title>
+
+<!-- 用來把顯現帳轉成 PNG 圖片 -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+:root {
+    --brown: #76583d;
+    --light-brown: #a98b68;
+    --paper: #f5f1e8;
+    --red: #a51f67;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    font-family: "Microsoft JhengHei", "Microsoft YaHei", "Noto Sans CJK TC", sans-serif;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.65), transparent 28%),
+        radial-gradient(circle at 80% 70%, rgba(180,160,130,.10), transparent 32%),
+        #eee9df;
+}
+
+h1 {
+    text-align: center;
+    margin: 8px 0 8px;
+    font-size: 30px;
+    font-family: "Microsoft JhengHei", sans-serif;
+}
+
+#sword-count {
+    text-align: center;
+    color: #777;
+    margin-bottom: 18px;
+}
+
+.panel {
+    max-width: 900px;
+    margin: 14px auto;
+    padding: 18px;
+    background: rgba(255,255,255,.90);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+.panel h2 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.field label {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+    border: 1px solid #cfc7ba;
+    border-radius: 7px;
+    padding: 9px 10px;
+    font-size: 16px;
+    font-family: "Microsoft JhengHei", sans-serif;
+    background: #fff;
+}
+
+input[type="text"] { min-width: 180px; }
+input[type="date"] { min-width: 170px; }
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: "Microsoft JhengHei", sans-serif;
+    background: var(--brown);
+    color: white;
+}
+
+button:hover { filter: brightness(.92); }
+
+.secondary { background: #777; }
+.green { background: #65785c; }
+.red-button { background: #a55a5a; }
+
+.note {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+details summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 180px;
+    margin-top: 10px;
+    line-height: 1.7;
+    resize: vertical;
+}
+
+.type-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.type-button {
+    background: #ddd;
+    color: #333;
+}
+
+.type-button.selected {
+    background: var(--brown);
+    color: #fff;
+}
+
+#select-area, #move-area {
+    display: none;
+}
+
+.position-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 8px 15px 8px 0;
+    font-size: 16px;
+}
+
+.position-option input {
+    width: 18px;
+    height: 18px;
+}
+
+#display-area {
+    width: 100%;
+    max-width: 1200px;
+    margin: 25px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.sword-card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    overflow: hidden;
+}
+
+.sword-image-area {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background: #eee;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.sword-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.no-image {
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.sword-number {
+    color: #777;
+    font-size: 14px;
+}
+
+.sword-name {
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+.sword-type {
+    color: var(--brown);
+    font-size: 14px;
+}
+
+.sword-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.small-button {
+    padding: 7px 11px;
+    font-size: 14px;
+}
+
+.kiwami-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.kiwami-label input {
+    width: 18px;
+    height: 18px;
+}
+
+#empty-message {
+    text-align: center;
+    color: #888;
+    padding: 40px 10px;
+}
+
+/* =========================
+   顯現帳輸出區
+   ========================= */
+#output-wrap {
+    display: none;
+    margin: 35px auto;
+}
+
+#output-sheet {
+    position: relative;
+    width: 1200px;
+    min-height: 760px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 35px 30px 30px 35px;
+    color: #222;
+    background:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,.75), transparent 22%),
+        radial-gradient(circle at 72% 75%, rgba(170,150,120,.08), transparent 25%),
+        repeating-linear-gradient(8deg, rgba(100,80,60,.018) 0px, rgba(100,80,60,.018) 1px, transparent 1px, transparent 5px),
+        #f4f0e8;
+    font-family: "Microsoft JhengHei", "Microsoft YaHei", sans-serif;
+}
+
+.output-title {
+    position: absolute;
+    right: 24px;
+    top: 42px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 43px;
+    line-height: 1.35;
+    letter-spacing: 4px;
+    font-weight: normal;
+}
+
+.output-info {
+    position: absolute;
+    right: 92px;
+    top: 330px;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 21px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+.output-info .date-line {
+    margin-right: 5px;
+}
+
+.output-info .owner-line {
+    margin-right: 18px;
+}
+
+.output-swords {
+    height: 690px;
+    padding: 5px 145px 0 5px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 8px 0;
+    writing-mode: vertical-rl;
+    direction: ltr;
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.output-sword {
+    height: 205px;
+    width: 55px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+    position: relative;
+    margin-left: 1px;
+}
+
+.output-sword .order {
+    font-size: 17px;
+    margin-bottom: 4px;
+}
+
+.output-sword .name {
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+.output-sword .kiwami-mark {
+    position: absolute;
+    left: 6px;
+    top: 118px;
+    font-family: "STKaiti", "KaiTi", "DFKai-SB", serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--red);
+    transform: rotate(-8deg) skewX(-12deg);
+    opacity: .92;
+    filter: blur(.15px);
+}
+
+/* 紅墨撇痕：極字後加一筆不規則墨線 */
+.output-sword .kiwami-mark::after {
+    content: "";
+    position: absolute;
+    width: 38px;
+    height: 9px;
+    left: -12px;
+    top: 10px;
+    border-radius: 70% 15% 75% 20%;
+    border-top: 4px solid var(--red);
+    border-bottom: 2px solid rgba(165,31,103,.65);
+    transform: rotate(-19deg);
+    opacity: .75;
+}
+
+/* 小螢幕：編輯介面正常縮放；輸出圖仍維持固定比例後縮小 */
+@media (max-width: 700px) {
+    body { padding: 12px; }
+    .field { width: 100%; }
+    input[type="text"], input[type="date"], select { width: 100%; }
+    .sword-actions { align-items: stretch; }
+    .kiwami-label { margin-left: 0; }
+    #output-sheet {
+        transform-origin: top left;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
+<h1>刀劍男士顕現帳</h1>
+<div id="sword-count">目前共有 0 把刀劍</div>
 
-    <h1>刀劍男士顕現帳</h1>
-
-
-    <!-- =========================
-         刀劍數量
-         ========================= -->
-
-
-    <div id="sword-count">
-
-        目前共有 0 把刀劍
-
+<!-- 審神者資料 -->
+<div class="panel">
+    <h2>① 審神者資料</h2>
+    <div class="row">
+        <div class="field">
+            <label for="owner-name">審神者名</label>
+            <input id="owner-name" type="text" placeholder="請輸入審神者名">
+        </div>
+        <div class="field">
+            <label for="appointment-date">就任日</label>
+            <input id="appointment-date" type="date">
+        </div>
     </div>
+    <p class="note">
+        這兩項資料會出現在最後產出的顯現帳圖片右側，格式會自動轉成「西曆＋漢字數字」。
+    </p>
+</div>
 
-
-
-    <!-- =========================
-         追加按鈕
-         ========================= -->
-
-
-    <div class="add-area">
-
-        <button onclick="openSelector()">
-
-            ＋ 追加
-
-        </button>
-
-    </div>
-
-
-
-    <!-- =========================
-         追加區
-         ========================= -->
-
+<!-- 追加 -->
+<div class="panel">
+    <h2>② 追加刀劍</h2>
+    <button onclick="openSelector()">＋ 追加一把刀</button>
 
     <div id="select-area">
+        <h3>選擇刀種</h3>
+        <div id="type-buttons" class="type-buttons"></div>
 
-
-        <h2>① 選擇刀種</h2>
-
-
-        <div class="types">
-
-
-            <button
-                class="type-button"
-                onclick="selectType('短刀', this)">
-
-                短刀
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('脇差', this)">
-
-                脇差
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('打刀', this)">
-
-                打刀
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('太刀', this)">
-
-                太刀
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('大太刀', this)">
-
-                大太刀
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('槍', this)">
-
-                槍
-
-            </button>
-
-
-            <button
-                class="type-button"
-                onclick="selectType('薙刀', this)">
-
-                薙刀
-
-            </button>
-
-
-        </div>
-
-
-
-        <h2 class="step-title">
-
-            ② 選擇刀名
-
-        </h2>
-
-
+        <h3>選擇刀名</h3>
         <select id="sword-select">
-
-
-            <option value="">
-
-                請先選擇刀種
-
-            </option>
-
-
+            <option value="">請先選擇刀種</option>
         </select>
 
-
-
-        <h2 class="step-title">
-
-            ③ 選擇插入位置
-
-        </h2>
-
-
-
+        <h3>選擇插入位置</h3>
         <label class="position-option">
-
-
-            <input
-                type="radio"
-                name="position"
-                value="last"
-                checked
-                onchange="changePosition()">
-
-
-            <span>
-
-                最後
-
-            </span>
-
-
+            <input type="radio" name="position" value="last" checked onchange="changePosition()">
+            最後
         </label>
-
-
-
         <label class="position-option">
-
-
-            <input
-                type="radio"
-                name="position"
-                value="insert"
-                onchange="changePosition()">
-
-
-            <span>
-
-                插入位置
-
-            </span>
-
-
+            <input type="radio" name="position" value="insert" onchange="changePosition()">
+            插入位置
         </label>
+        <select id="position-select" disabled></select>
 
-
-
-        <select
-            id="position-select"
-            disabled>
-
-
-            <option value="">
-
-                請選擇要插在誰的「前面」
-
-            </option>
-
-
-        </select>
-
-
-
-        <br>
-
-
-        <button onclick="addSword()">
-
-            追加這把刀
-
-        </button>
-
-
-        <button
-            class="close-button"
-            onclick="closeSelector()">
-
-            關閉
-
-        </button>
-
-
+        <div style="margin-top:12px;">
+            <button onclick="addSword()">追加這把刀</button>
+            <button class="secondary" onclick="closeSelector()">關閉</button>
+        </div>
     </div>
+</div>
 
+<!-- 大量資料管理 -->
+<div class="panel">
+    <details>
+        <summary>③ 刀劍資料管理（不會程式也可以用）</summary>
+        <p class="note">
+            如果未來刀劍超過 100 把，不必一行一行改程式。
+            你可以把完整名單一次貼進下面。每行格式：<b>刀種｜刀名</b>。
+            例如：<b>打刀｜加州清光</b>。按「匯入名單」後，網站就會更新下拉選單。
+        </p>
+        <textarea id="bulk-data" placeholder="短刀｜今剣
+短刀｜愛染国俊
+脇差｜鯰尾藤四郎
+打刀｜加州清光
+太刀｜三日月宗近"></textarea>
+        <div class="row" style="margin-top:10px;">
+            <button class="green" onclick="importSwordData()">匯入／更新刀劍名單</button>
+            <button class="secondary" onclick="loadCurrentDataToText()">把目前名單載入文字框</button>
+            <button class="secondary" onclick="resetDefaultData()">恢復內建名單</button>
+        </div>
+        <p class="note">
+            ※ 此功能會把名單儲存在你目前使用的瀏覽器。若換電腦或清除瀏覽器資料，請先用「目前名單」備份。
+            若你希望更新 GitHub 網站的「內建名單」，之後也可以直接把名單交給我，我幫你整理成完整新版程式碼。
+        </p>
+    </details>
+</div>
 
+<!-- 移動 -->
+<div id="move-area" class="panel">
+    <h2>移動刀劍</h2>
+    <p id="move-sword-name"></p>
 
-    <!-- =========================
-         移動區
-         ========================= -->
+    <label class="position-option">
+        <input type="radio" name="move-position" value="last" checked onchange="changeMovePosition()">
+        最後
+    </label>
+    <label class="position-option">
+        <input type="radio" name="move-position" value="insert" onchange="changeMovePosition()">
+        插入位置
+    </label>
+    <select id="move-position-select" disabled></select>
 
-
-    <div id="move-area">
-
-
-        <h2 class="move-title">
-
-            移動刀劍
-
-        </h2>
-
-
-        <p id="move-sword-name"></p>
-
-
-        <h3>
-
-            選擇新的位置
-
-        </h3>
-
-
-        <label class="position-option">
-
-
-            <input
-                type="radio"
-                name="move-position"
-                value="last"
-                checked
-                onchange="changeMovePosition()">
-
-
-            <span>
-
-                最後
-
-            </span>
-
-
-        </label>
-
-
-        <label class="position-option">
-
-
-            <input
-                type="radio"
-                name="move-position"
-                value="insert"
-                onchange="changeMovePosition()">
-
-
-            <span>
-
-                插入位置
-
-            </span>
-
-
-        </label>
-
-
-        <select
-            id="move-position-select"
-            disabled>
-
-
-            <option value="">
-
-                請選擇要移到誰的「前面」
-
-            </option>
-
-
-        </select>
-
-
-        <br>
-
-
-        <button onclick="confirmMove()">
-
-            確定移動
-
-        </button>
-
-
-        <button
-            class="close-button"
-            onclick="closeMoveArea()">
-
-            取消
-
-        </button>
-
-
+    <div style="margin-top:12px;">
+        <button onclick="confirmMove()">確定移動</button>
+        <button class="secondary" onclick="closeMoveArea()">取消</button>
     </div>
-
-
-
-    <!-- =========================
-         刀劍顯示區
-         ========================= -->
-
-
-    <div id="display-area"></div>
-
-
-
-    <script>
-
-
-        /*
-         * =========================
-         * 刀種與刀名
-         * =========================
-         */
-
-
-        const swords = {
-
-
-            "短刀": [
-
-                "今剣",
-
-                "愛染国俊",
-
-                "秋田藤四郎",
-
-                "厚藤四郎"
-
-            ],
-
-
-            "脇差": [
-
-                "鯰尾藤四郎",
-
-                "骨喰藤四郎",
-
-                "堀川国広"
-
-            ],
-
-
-            "打刀": [
-
-                "加州清光",
-
-                "歌仙兼定",
-
-                "陸奥守吉行",
-
-                "山姥切国広"
-
-            ],
-
-
-            "太刀": [
-
-                "三日月宗近",
-
-                "小狐丸",
-
-                "一期一振",
-
-                "鶴丸国永"
-
-            ],
-
-
-            "大太刀": [
-
-                "蛍丸",
-
-                "太郎太刀",
-
-                "次郎太刀"
-
-            ],
-
-
-            "槍": [
-
-                "蜻蛉切",
-
-                "日本号",
-
-                "御手杵"
-
-            ],
-
-
-            "薙刀": [
-
-                "岩融",
-
-                "巴形薙刀",
-
-                "静形薙刀"
-
-            ]
-
-        };
-
-
-
-        /*
-         * =========================
-         * 目前選擇的刀種
-         * =========================
-         */
-
-
-        let selectedType = "";
-
-
-
-        /*
-         * =========================
-         * 已追加刀劍
-         * =========================
-         */
-
-
-        let addedSwords = [];
-
-
-
-        /*
-         * =========================
-         * 目前正在移動的刀
-         * =========================
-         */
-
-
-        let movingIndex = -1;
-
-
-
-        /*
-         * =========================
-         * 開啟追加
-         * =========================
-         */
-
-
-        function openSelector() {
-
-
-            document
-                .getElementById("select-area")
-                .style.display = "block";
-
-
-            updatePositionList();
-
-
+</div>
+
+<!-- 刀劍清單 -->
+<div id="display-area"></div>
+<div id="empty-message">尚未追加刀劍，請按「＋ 追加一把刀」。</div>
+
+<!-- 產出圖片 -->
+<div class="panel" style="text-align:center;">
+    <h2>④ 產出顯現帳圖片</h2>
+    <p class="note">勾選「極」的刀會在圖片中以紅色毛筆墨痕效果標示。</p>
+    <button onclick="generateImage()">產出顯現帳 PNG 圖片</button>
+</div>
+
+<!-- 隱藏的輸出畫布 -->
+<div id="output-wrap">
+    <div id="output-sheet">
+        <div class="output-title">刀剣男士顕現帳</div>
+        <div class="output-info">
+            <div class="date-line" id="output-date">就任日　西暦二〇一七年八月十二日</div>
+            <div class="owner-line" id="output-owner">審神者　○○○</div>
+        </div>
+        <div class="output-swords" id="output-swords"></div>
+    </div>
+</div>
+
+<script>
+/* =========================================================
+   內建刀劍資料
+   ★ 以後若你要我幫你更新大量刀劍，我會主要修改這裡。
+   你自己也可以使用上面的「刀劍資料管理」大量貼上。
+   ========================================================= */
+const DEFAULT_SWORDS = {
+    "短刀": [
+        "今剣",
+        "愛染国俊",
+        "秋田藤四郎",
+        "厚藤四郎"
+    ],
+    "脇差": [
+        "鯰尾藤四郎",
+        "骨喰藤四郎",
+        "堀川国広"
+    ],
+    "打刀": [
+        "加州清光",
+        "歌仙兼定",
+        "陸奥守吉行",
+        "山姥切国広"
+    ],
+    "太刀": [
+        "三日月宗近",
+        "小狐丸",
+        "一期一振",
+        "鶴丸国永"
+    ],
+    "大太刀": [
+        "蛍丸",
+        "太郎太刀",
+        "次郎太刀"
+    ],
+    "槍": [
+        "蜻蛉切",
+        "日本号",
+        "御手杵"
+    ],
+    "薙刀": [
+        "岩融",
+        "巴形薙刀",
+        "静形薙刀"
+    ]
+};
+
+let swords = loadSwordData();
+let selectedType = "";
+let addedSwords = loadAddedSwords();
+let movingIndex = -1;
+
+function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
+function loadSwordData() {
+    try {
+        const saved = localStorage.getItem("toukenSwordData");
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed === "object") return parsed;
+        }
+    } catch (e) {}
+    return deepCopy(DEFAULT_SWORDS);
+}
+
+function saveSwordData() {
+    localStorage.setItem("toukenSwordData", JSON.stringify(swords));
+}
+
+function loadAddedSwords() {
+    try {
+        const saved = localStorage.getItem("toukenAddedSwords");
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) return parsed;
+        }
+    } catch (e) {}
+    return [];
+}
+
+function saveAddedSwords() {
+    localStorage.setItem("toukenAddedSwords", JSON.stringify(addedSwords));
+}
+
+function initTypeButtons() {
+    const area = document.getElementById("type-buttons");
+    area.innerHTML = "";
+
+    Object.keys(swords).forEach(type => {
+        const button = document.createElement("button");
+        button.className = "type-button";
+        button.textContent = type;
+        button.onclick = () => selectType(type, button);
+        area.appendChild(button);
+    });
+}
+
+function openSelector() {
+    document.getElementById("select-area").style.display = "block";
+    updatePositionList();
+}
+
+function closeSelector() {
+    document.getElementById("select-area").style.display = "none";
+}
+
+function selectType(type, button) {
+    selectedType = type;
+
+    document.querySelectorAll(".type-button").forEach(btn => {
+        btn.classList.remove("selected");
+    });
+    button.classList.add("selected");
+
+    const select = document.getElementById("sword-select");
+    select.innerHTML = '<option value="">請選擇刀名</option>';
+
+    (swords[type] || []).forEach(sword => {
+        const option = document.createElement("option");
+        option.value = sword;
+        option.textContent = sword;
+        select.appendChild(option);
+    });
+}
+
+function changePosition() {
+    const selected = document.querySelector('input[name="position"]:checked').value;
+    document.getElementById("position-select").disabled = selected !== "insert";
+}
+
+function updatePositionList() {
+    const select = document.getElementById("position-select");
+    select.innerHTML = '<option value="">請選擇要插在誰的「前面」</option>';
+
+    addedSwords.forEach((sword, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = numberToKanji(index + 1) + "　" + sword.name + " 的前面";
+        select.appendChild(option);
+    });
+}
+
+function addSword() {
+    const select = document.getElementById("sword-select");
+    const swordName = select.value;
+
+    if (!selectedType) {
+        alert("請先選擇刀種");
+        return;
+    }
+
+    if (!swordName) {
+        alert("請選擇刀名");
+        return;
+    }
+
+    const alreadyAdded = addedSwords.some(sword => sword.name === swordName);
+    if (alreadyAdded) {
+        alert("這把刀已經追加過了");
+        return;
+    }
+
+    const newSword = {
+        name: swordName,
+        type: selectedType,
+        kiwami: false
+    };
+
+    const position = document.querySelector('input[name="position"]:checked').value;
+
+    if (position === "last") {
+        addedSwords.push(newSword);
+    } else {
+        const insertIndex = parseInt(document.getElementById("position-select").value);
+        if (isNaN(insertIndex)) {
+            alert("請選擇插入位置");
+            return;
+        }
+        addedSwords.splice(insertIndex, 0, newSword);
+    }
+
+    saveAddedSwords();
+    renderSwords();
+    updatePositionList();
+
+    document.querySelector('input[name="position"][value="last"]').checked = true;
+    changePosition();
+    select.value = "";
+}
+
+function renderSwords() {
+    const display = document.getElementById("display-area");
+    display.innerHTML = "";
+
+    document.getElementById("sword-count").textContent =
+        "目前共有 " + addedSwords.length + " 把刀劍";
+
+    document.getElementById("empty-message").style.display =
+        addedSwords.length ? "none" : "block";
+
+    addedSwords.forEach((sword, index) => {
+        const card = document.createElement("div");
+        card.className = "sword-card";
+
+        const imagePath = "images/" + sword.name + ".jpg";
+
+        card.innerHTML = `
+            <div class="sword-image-area">
+                <img class="sword-image"
+                     src="${imagePath}"
+                     alt="${escapeHtml(sword.name)}"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div class="no-image" style="display:none;">圖片尚未加入</div>
+            </div>
+
+            <div class="sword-number">${numberToKanji(index + 1)}</div>
+            <div class="sword-name">${escapeHtml(sword.name)}</div>
+            <div class="sword-type">${escapeHtml(sword.type)}</div>
+
+            <div class="sword-actions">
+                <button class="small-button green" onclick="startMove(${index})">移動</button>
+                <button class="small-button red-button" onclick="deleteSword(${index})">刪除</button>
+
+                <label class="kiwami-label">
+                    <input type="checkbox"
+                           ${sword.kiwami ? "checked" : ""}
+                           onchange="toggleKiwami(${index}, this.checked)">
+                    極
+                </label>
+            </div>
+        `;
+
+        display.appendChild(card);
+    });
+}
+
+function toggleKiwami(index, checked) {
+    addedSwords[index].kiwami = checked;
+    saveAddedSwords();
+}
+
+function startMove(index) {
+    movingIndex = index;
+    const sword = addedSwords[index];
+
+    document.getElementById("move-sword-name").textContent =
+        "目前選擇：" + numberToKanji(index + 1) + "　" + sword.name;
+
+    updateMovePositionList();
+
+    document.getElementById("move-area").style.display = "block";
+
+    document.querySelector('input[name="move-position"][value="last"]').checked = true;
+    changeMovePosition();
+
+    window.scrollTo({
+        top: document.getElementById("move-area").offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+function updateMovePositionList() {
+    const select = document.getElementById("move-position-select");
+    select.innerHTML = '<option value="">請選擇要移到誰的「前面」</option>';
+
+    addedSwords.forEach((sword, index) => {
+        if (index === movingIndex) return;
+
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = numberToKanji(index + 1) + "　" + sword.name + " 的前面";
+        select.appendChild(option);
+    });
+}
+
+function changeMovePosition() {
+    const selected = document.querySelector('input[name="move-position"]:checked').value;
+    document.getElementById("move-position-select").disabled = selected !== "insert";
+}
+
+function confirmMove() {
+    if (movingIndex < 0) return;
+
+    const position = document.querySelector('input[name="move-position"]:checked').value;
+    const movingSword = addedSwords.splice(movingIndex, 1)[0];
+
+    if (position === "last") {
+        addedSwords.push(movingSword);
+    } else {
+        const targetIndex = parseInt(document.getElementById("move-position-select").value);
+
+        if (isNaN(targetIndex)) {
+            addedSwords.splice(movingIndex, 0, movingSword);
+            alert("請選擇新的位置");
+            return;
         }
 
+        let newIndex = targetIndex;
+        if (targetIndex > movingIndex) newIndex--;
 
+        addedSwords.splice(newIndex, 0, movingSword);
+    }
 
-        /*
-         * =========================
-         * 關閉追加
-         * =========================
-         */
+    saveAddedSwords();
+    renderSwords();
+    updatePositionList();
+    closeMoveArea();
+}
 
+function closeMoveArea() {
+    movingIndex = -1;
+    document.getElementById("move-area").style.display = "none";
+}
 
-        function closeSelector() {
+function deleteSword(index) {
+    const sword = addedSwords[index];
 
+    if (!confirm("確定要刪除「" + sword.name + "」嗎？")) return;
 
-            document
-                .getElementById("select-area")
-                .style.display = "none";
+    addedSwords.splice(index, 1);
+    saveAddedSwords();
+    renderSwords();
+    updatePositionList();
+}
 
+function importSwordData() {
+    const text = document.getElementById("bulk-data").value.trim();
 
+    if (!text) {
+        alert("請先貼上刀劍名單。");
+        return;
+    }
+
+    const newData = {};
+    const lines = text.split(/\r?\n/);
+
+    let valid = 0;
+    let invalid = 0;
+
+    lines.forEach(rawLine => {
+        const line = rawLine.trim();
+
+        if (!line || line.startsWith("#")) return;
+
+        const parts = line.split(/[｜|,，\t]/).map(x => x.trim()).filter(Boolean);
+
+        if (parts.length < 2) {
+            invalid++;
+            return;
         }
 
+        const type = parts[0];
+        const name = parts[1];
 
-
-        /*
-         * =========================
-         * 選擇刀種
-         * =========================
-         */
-
-
-        function selectType(type, button) {
-
-
-            selectedType = type;
-
-
-            const buttons =
-                document.querySelectorAll(
-                    ".type-button"
-                );
-
-
-            buttons.forEach(function(btn) {
-
-                btn.classList.remove("selected");
-
-            });
-
-
-            button.classList.add("selected");
-
-
-            const select =
-                document.getElementById(
-                    "sword-select"
-                );
-
-
-            select.innerHTML =
-                '<option value="">請選擇刀名</option>';
-
-
-            swords[type].forEach(
-                function(sword) {
-
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-
-                    option.value = sword;
-
-                    option.textContent = sword;
-
-
-                    select.appendChild(
-                        option
-                    );
-
-
-                }
-            );
-
-
+        if (!newData[type]) newData[type] = [];
+        if (!newData[type].includes(name)) {
+            newData[type].push(name);
+            valid++;
         }
-
-
-
-        /*
-         * =========================
-         * 切換追加位置
-         * =========================
-         */
-
-
-        function changePosition() {
-
-
-            const selected =
-                document.querySelector(
-                    'input[name="position"]:checked'
-                ).value;
-
-
-            const positionSelect =
-                document.getElementById(
-                    "position-select"
-                );
-
-
-            if (
-                selected === "last"
-            ) {
-
-
-                positionSelect.disabled = true;
-
-
-            } else {
-
-
-                positionSelect.disabled = false;
-
-
-            }
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 更新追加位置
-         * =========================
-         */
-
-
-        function updatePositionList() {
-
-
-            const positionSelect =
-                document.getElementById(
-                    "position-select"
-                );
-
-
-            positionSelect.innerHTML =
-                '<option value="">請選擇要插在誰的「前面」</option>';
-
-
-            addedSwords.forEach(
-                function(sword, index) {
-
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-
-                    option.value = index;
-
-
-                    option.textContent =
-                        (index + 1)
-                        + ". "
-                        + sword.name
-                        + "　"
-                        + sword.type
-                        + " 的前面";
-
-
-                    positionSelect.appendChild(
-                        option
-                    );
-
-
-                }
-            );
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 追加刀劍
-         * =========================
-         */
-
-
-        function addSword() {
-
-
-            const select =
-                document.getElementById(
-                    "sword-select"
-                );
-
-
-            const swordName =
-                select.value;
-
-
-            if (!selectedType) {
-
-
-                alert(
-                    "請先選擇刀種"
-                );
-
-
-                return;
-
-
-            }
-
-
-            if (!swordName) {
-
-
-                alert(
-                    "請選擇刀名"
-                );
-
-
-                return;
-
-
-            }
-
-
-
-            const alreadyAdded =
-                addedSwords.some(
-                    function(sword) {
-
-                        return sword.name
-                            === swordName;
-
-                    }
-                );
-
-
-            if (alreadyAdded) {
-
-
-                alert(
-                    "這把刀已經追加過了"
-                );
-
-
-                return;
-
-
-            }
-
-
-
-            const newSword = {
-
-
-                name: swordName,
-
-                type: selectedType
-
-            };
-
-
-
-            const position =
-                document.querySelector(
-                    'input[name="position"]:checked'
-                ).value;
-
-
-
-            if (
-                position === "last"
-            ) {
-
-
-                addedSwords.push(
-                    newSword
-                );
-
-
-            } else {
-
-
-                const positionSelect =
-                    document.getElementById(
-                        "position-select"
-                    );
-
-
-                const insertIndex =
-                    parseInt(
-                        positionSelect.value
-                    );
-
-
-                if (
-                    isNaN(insertIndex)
-                ) {
-
-
-                    alert(
-                        "請選擇插入位置"
-                    );
-
-
-                    return;
-
-
-                }
-
-
-                addedSwords.splice(
-                    insertIndex,
-                    0,
-                    newSword
-                );
-
-
-            }
-
-
-
-            renderSwords();
-
-
-            updatePositionList();
-
-
-            document.querySelector(
-                'input[name="position"][value="last"]'
-            ).checked = true;
-
-
-            changePosition();
-
-
-            select.value = "";
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 顯示刀劍
-         * =========================
-         */
-
-
-        function renderSwords() {
-
-
-            const display =
-                document.getElementById(
-                    "display-area"
-                );
-
-
-            display.innerHTML = "";
-
-
-            /*
-             * 更新數量
-             */
-
-
-            document.getElementById(
-                "sword-count"
-            ).textContent =
-                "目前共有 "
-                + addedSwords.length
-                + " 把刀劍";
-
-
-
-            addedSwords.forEach(
-                function(sword, index) {
-
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    card.className =
-                        "sword-card";
-
-
-                    /*
-                     * 圖片檔名
-                     *
-                     * 目前先使用：
-                     *
-                     * images/刀名.jpg
-                     *
-                     */
-
-
-                    const imagePath =
-                        "images/"
-                        + sword.name
-                        + ".jpg";
-
-
-
-                    card.innerHTML = `
-
-                        <div class="sword-image-area">
-
-                            <img
-                                class="sword-image"
-                                src="${imagePath}"
-                                alt="${sword.name}"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-
-                            <div
-                                class="no-image"
-                                style="display:none;">
-
-                                圖片尚未加入
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="sword-number">
-
-                            ${index + 1}.
-
-                        </div>
-
-
-                        <div class="sword-name">
-
-                            ${sword.name}
-
-                        </div>
-
-
-                        <div class="sword-type">
-
-                            ${sword.type}
-
-                        </div>
-
-
-                        <div class="sword-actions">
-
-
-                            <button
-                                class="small-button move-button"
-                                onclick="startMove(${index})">
-
-                                移動
-
-                            </button>
-
-
-                            <button
-                                class="small-button delete-button"
-                                onclick="deleteSword(${index})">
-
-                                刪除
-
-                            </button>
-
-
-                        </div>
-
-                    `;
-
-
-                    display.appendChild(
-                        card
-                    );
-
-
-                }
-            );
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 開始移動
-         * =========================
-         */
-
-
-        function startMove(index) {
-
-
-            movingIndex = index;
-
-
-            const sword =
-                addedSwords[index];
-
-
-            document.getElementById(
-                "move-sword-name"
-            ).textContent =
-                "目前選擇："
-                + (index + 1)
-                + ". "
-                + sword.name
-                + "　"
-                + sword.type;
-
-
-            updateMovePositionList();
-
-
-            document.getElementById(
-                "move-area"
-            ).style.display = "block";
-
-
-            document.querySelector(
-                'input[name="move-position"][value="last"]'
-            ).checked = true;
-
-
-            changeMovePosition();
-
-
-            window.scrollTo(
-                0,
-                document.getElementById(
-                    "move-area"
-                ).offsetTop - 20
-            );
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 更新移動位置
-         * =========================
-         */
-
-
-        function updateMovePositionList() {
-
-
-            const select =
-                document.getElementById(
-                    "move-position-select"
-                );
-
-
-            select.innerHTML =
-                '<option value="">請選擇要移到誰的「前面」</option>';
-
-
-            addedSwords.forEach(
-                function(sword, index) {
-
-
-                    if (
-                        index === movingIndex
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-
-                    option.value = index;
-
-
-                    option.textContent =
-                        (index + 1)
-                        + ". "
-                        + sword.name
-                        + "　"
-                        + sword.type
-                        + " 的前面";
-
-
-                    select.appendChild(
-                        option
-                    );
-
-
-                }
-            );
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 切換移動位置
-         * =========================
-         */
-
-
-        function changeMovePosition() {
-
-
-            const selected =
-                document.querySelector(
-                    'input[name="move-position"]:checked'
-                ).value;
-
-
-            const select =
-                document.getElementById(
-                    "move-position-select"
-                );
-
-
-            if (
-                selected === "last"
-            ) {
-
-
-                select.disabled = true;
-
-
-            } else {
-
-
-                select.disabled = false;
-
-
-            }
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 確定移動
-         * =========================
-         */
-
-
-        function confirmMove() {
-
-
-            if (
-                movingIndex < 0
-            ) {
-
-                return;
-
-            }
-
-
-            const position =
-                document.querySelector(
-                    'input[name="move-position"]:checked'
-                ).value;
-
-
-            const movingSword =
-                addedSwords.splice(
-                    movingIndex,
-                    1
-                )[0];
-
-
-
-            if (
-                position === "last"
-            ) {
-
-
-                addedSwords.push(
-                    movingSword
-                );
-
-
-            } else {
-
-
-                const select =
-                    document.getElementById(
-                        "move-position-select"
-                    );
-
-
-                const targetIndex =
-                    parseInt(
-                        select.value
-                    );
-
-
-                if (
-                    isNaN(targetIndex)
-                ) {
-
-
-                    addedSwords.splice(
-                        movingIndex,
-                        0,
-                        movingSword
-                    );
-
-
-                    alert(
-                        "請選擇新的位置"
-                    );
-
-
-                    return;
-
-                }
-
-
-                let newIndex =
-                    targetIndex;
-
-
-                if (
-                    targetIndex > movingIndex
-                ) {
-
-                    newIndex--;
-
-                }
-
-
-                addedSwords.splice(
-                    newIndex,
-                    0,
-                    movingSword
-                );
-
-
-            }
-
-
-
-            renderSwords();
-
-
-            updatePositionList();
-
-
-            closeMoveArea();
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 關閉移動
-         * =========================
-         */
-
-
-        function closeMoveArea() {
-
-
-            movingIndex = -1;
-
-
-            document.getElementById(
-                "move-area"
-            ).style.display = "none";
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 刪除
-         * =========================
-         */
-
-
-        function deleteSword(index) {
-
-
-            const sword =
-                addedSwords[index];
-
-
-            const confirmed =
-                confirm(
-                    "確定要刪除「"
-                    + sword.name
-                    + "」嗎？"
-                );
-
-
-            if (!confirmed) {
-
-                return;
-
-            }
-
-
-            addedSwords.splice(
-                index,
-                1
-            );
-
-
-            renderSwords();
-
-
-            updatePositionList();
-
-
-        }
-
-
-
-        /*
-         * =========================
-         * 初始畫面
-         * =========================
-         */
-
-
-        renderSwords();
-
-
-    </script>
-
+    });
+
+    if (!valid) {
+        alert("沒有讀到有效資料。\n請使用：刀種｜刀名");
+        return;
+    }
+
+    swords = newData;
+    saveSwordData();
+    initTypeButtons();
+
+    selectedType = "";
+    document.getElementById("sword-select").innerHTML =
+        '<option value="">請先選擇刀種</option>';
+
+    alert(
+        "刀劍名單更新完成！\n" +
+        "成功讀取：" + valid + " 把\n" +
+        (invalid ? "無法讀取：" + invalid + " 行" : "")
+    );
+}
+
+function loadCurrentDataToText() {
+    const lines = [];
+
+    Object.keys(swords).forEach(type => {
+        swords[type].forEach(name => {
+            lines.push(type + "｜" + name);
+        });
+    });
+
+    document.getElementById("bulk-data").value = lines.join("\n");
+}
+
+function resetDefaultData() {
+    if (!confirm("確定要恢復內建刀劍名單嗎？")) return;
+
+    swords = deepCopy(DEFAULT_SWORDS);
+    saveSwordData();
+    initTypeButtons();
+
+    document.getElementById("bulk-data").value = "";
+    selectedType = "";
+    document.getElementById("sword-select").innerHTML =
+        '<option value="">請先選擇刀種</option>';
+
+    alert("已恢復內建名單。");
+}
+
+/* =========================================================
+   漢字數字
+   ========================================================= */
+const KANJI_NUMBERS = ["〇","一","二","三","四","五","六","七","八","九"];
+
+function numberToKanji(num) {
+    if (num <= 0) return "〇";
+    if (num < 10) return KANJI_NUMBERS[num];
+    if (num < 100) {
+        const tens = Math.floor(num / 10);
+        const ones = num % 10;
+        return (tens === 1 ? "十" : KANJI_NUMBERS[tens] + "十") +
+               (ones ? KANJI_NUMBERS[ones] : "");
+    }
+    if (num < 1000) {
+        const hundreds = Math.floor(num / 100);
+        const rest = num % 100;
+        return KANJI_NUMBERS[hundreds] + "百" + (rest ? numberToKanji(rest) : "");
+    }
+    return String(num);
+}
+
+/* 日期：輸出成「西暦二〇一七年八月十二日」 */
+function formatJapaneseDate(dateValue) {
+    if (!dateValue) return "西暦二〇一七年八月十二日";
+
+    const [year, month, day] = dateValue.split("-").map(Number);
+
+    const yearText = String(year).split("").map(d => KANJI_NUMBERS[Number(d)]).join("");
+    return "西暦" + yearText + "年" +
+           numberToKanji(month) + "月" +
+           numberToKanji(day) + "日";
+}
+
+function escapeHtml(text) {
+    return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+/* =========================================================
+   產出圖片
+   ========================================================= */
+async function generateImage() {
+    const owner = document.getElementById("owner-name").value.trim();
+    const date = document.getElementById("appointment-date").value;
+
+    if (!owner) {
+        alert("請先填寫「審神者名」。");
+        document.getElementById("owner-name").focus();
+        return;
+    }
+
+    if (!date) {
+        alert("請先填寫「就任日」。");
+        document.getElementById("appointment-date").focus();
+        return;
+    }
+
+    if (!addedSwords.length) {
+        alert("目前沒有刀劍，請先追加刀劍。");
+        return;
+    }
+
+    document.getElementById("output-owner").textContent =
+        "審神者　" + owner;
+
+    document.getElementById("output-date").textContent =
+        "就任日　" + formatJapaneseDate(date);
+
+    const output = document.getElementById("output-swords");
+    output.innerHTML = "";
+
+    addedSwords.forEach((sword, index) => {
+        const item = document.createElement("div");
+        item.className = "output-sword";
+
+        item.innerHTML = `
+            <span class="order">${numberToKanji(index + 1)}</span>
+            <span class="name">${escapeHtml(sword.name)}</span>
+            ${sword.kiwami ? '<span class="kiwami-mark">極</span>' : ''}
+        `;
+
+        output.appendChild(item);
+    });
+
+    const wrap = document.getElementById("output-wrap");
+    wrap.style.display = "block";
+
+    // 讓瀏覽器先完成直排排版
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    try {
+        const canvas = await html2canvas(document.getElementById("output-sheet"), {
+            scale: 2,
+            backgroundColor: "#f4f0e8",
+            useCORS: true,
+            logging: false
+        });
+
+        const link = document.createElement("a");
+        const safeOwner = owner.replace(/[\\/:*?"<>|]/g, "_") || "審神者";
+        link.download = "刀劍男士顕現帳_" + safeOwner + ".png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+
+        alert("圖片已產出！");
+    } catch (error) {
+        console.error(error);
+        alert("產出圖片時發生問題。\n請確認網路正常後再試一次。");
+    }
+}
+
+/* =========================================================
+   啟動
+   ========================================================= */
+initTypeButtons();
+renderSwords();
+</script>
 
 </body>
-
 </html>
