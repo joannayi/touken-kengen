@@ -53,51 +53,61 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
 #output-wrap{display:none;margin:35px auto}
 #output-sheet{
  position:relative;width:1600px;height:900px;overflow:hidden;
- color:#222;background:
- radial-gradient(ellipse at 12% 18%,rgba(255,255,255,.72),transparent 30%),
- radial-gradient(ellipse at 88% 78%,rgba(160,135,105,.09),transparent 32%),
- repeating-linear-gradient(7deg,rgba(110,90,65,.022) 0,rgba(110,90,65,.022) 1px,transparent 1px,transparent 6px),
- repeating-linear-gradient(93deg,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 2px,transparent 2px,transparent 11px),
- #f1ede5;
+ color:#222;
+ /* 接近原網站的淡雅和紙：不使用明顯的大塊漸層 */
+ background-color:#f7f4ec;
+ background-image:
+   repeating-linear-gradient(0deg,rgba(90,70,45,.018) 0,rgba(90,70,45,.018) 1px,transparent 1px,transparent 5px),
+   repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0,rgba(255,255,255,.22) 1px,transparent 1px,transparent 7px),
+   radial-gradient(ellipse at 35% 15%,rgba(255,255,255,.20),transparent 42%),
+   radial-gradient(ellipse at 80% 80%,rgba(120,95,65,.018),transparent 45%);
  font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;
+}
+#output-sheet::before{
+ content:"";position:absolute;inset:0;pointer-events:none;opacity:.20;
+ background-image:repeating-linear-gradient(7deg,transparent 0,transparent 9px,rgba(110,90,65,.035) 10px,transparent 11px);
 }
 .output-title{
  position:absolute;right:28px;top:34px;writing-mode:vertical-rl;text-orientation:upright;
- font-size:43px;line-height:1.35;letter-spacing:4px;font-weight:normal
+ font-size:43px;line-height:1.35;letter-spacing:4px;font-weight:normal;z-index:2
 }
 .output-info{
- position:absolute;right:98px;top:375px;
- display:flex;flex-direction:row;gap:8px;
+ position:absolute;right:96px;top:385px;
+ display:flex;flex-direction:row;gap:9px;
  font-size:20px;line-height:1.35;letter-spacing:2px;white-space:nowrap;
- font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;
+ font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;z-index:2
 }
-.output-info .date-line,.output-info .owner-line{writing-mode:vertical-rl;text-orientation:upright;display:block;margin:0;}
-.output-info .date-line,.output-info .owner-line{margin:0}
+.output-info .date-line,.output-info .owner-line{
+ writing-mode:vertical-rl;text-orientation:upright;display:block;margin:0;
+}
 .output-swords{
- position:absolute;left:38px;right:155px;top:20px;bottom:20px;
- display:flex;flex-direction:column;gap:0
+ position:absolute;left:34px;right:158px;top:34px;height:620px;
+ display:flex;flex-direction:column;gap:0;z-index:1;
 }
 .output-row{
- display:flex;flex-direction:row-reverse;align-items:flex-start;
- height:calc((100% - 20px)/3);width:100%
+ display:flex;flex-direction:row-reverse;justify-content:flex-start;align-items:flex-start;
+ height:calc(620px / 3);width:100%;gap:0;
 }
 .output-sword{
- flex:1 1 0;min-width:0;height:100%;position:relative;
- display:flex;flex-direction:column;align-items:center;
- white-space:nowrap;writing-mode:vertical-rl;
+ flex:0 0 var(--col-width);width:var(--col-width);height:100%;
+ position:relative;display:block;text-align:center;white-space:nowrap;
+ writing-mode:vertical-rl;text-orientation:upright;
 }
-.output-sword .order{font-size:17px;line-height:1.1;margin-bottom:3px}
+.output-sword .order,.output-sword .name,.output-sword .kiwami-mark{
+ display:block;writing-mode:vertical-rl;text-orientation:upright;
+}
+.output-sword .order{font-size:17px;line-height:1.1;margin:0 0 4px 0}
 .output-sword .name{font-size:19px;line-height:1.1;letter-spacing:1px}
 .output-sword .kiwami-mark{
- position:static;display:block;margin-top:3px;
+ position:relative;margin:4px 0 0 0;
  font-family:"DFKai-SB","KaiTi","STKaiti",serif;
- font-size:25px;font-weight:bold;color:#a51f67;
- transform:rotate(-8deg) skewX(-12deg);opacity:.93;
+ font-size:23px;font-weight:bold;color:#a51f67;
+ transform:rotate(-7deg) skewX(-10deg);opacity:.94;
 }
 .output-sword .kiwami-mark:after{
- content:"";position:absolute;width:40px;height:9px;left:-10px;top:9px;
- border-top:4px solid #a51f67;border-bottom:2px solid rgba(165,31,103,.6);
- border-radius:70% 15% 75% 20%;transform:rotate(-19deg);opacity:.72
+ content:"";position:absolute;width:38px;height:8px;left:-9px;top:8px;
+ border-top:3px solid #a51f67;border-bottom:1px solid rgba(165,31,103,.48);
+ border-radius:70% 15% 75% 20%;transform:rotate(-18deg);opacity:.72
 }
 @media(max-width:700px){
  body{padding:12px}.field{width:100%}input[type=text],input[type=date]{width:100%}
@@ -323,12 +333,13 @@ function buildOutput(){
  document.getElementById("output-owner").textContent="審神者　"+owner;
  document.getElementById("output-date").textContent="就任日　"+formatDate(date);
  const cols=outputColumns(addedSwords.length);
- const baseCol=37.5;
- const width=Math.round(1600+(cols-35)*baseCol);
+ const colWidth=41;
+ const width=Math.max(1600,Math.round(1600+(cols-35)*colWidth));
  const sheet=document.getElementById("output-sheet");
  sheet.style.width=width+"px";
+ sheet.style.setProperty("--col-width",colWidth+"px");
  const area=document.getElementById("output-swords");area.innerHTML="";
- area.style.left="38px";area.style.right="155px";
+ area.style.left="34px";area.style.right="158px";
  for(let row=0;row<3;row++){
   const rd=document.createElement("div");rd.className="output-row";
   for(let j=0;j<cols;j++){
