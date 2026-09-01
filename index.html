@@ -13,9 +13,19 @@
 
     <style>
 
+        * {
+            box-sizing: border-box;
+        }
+
+
         body {
 
-            font-family: sans-serif;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                "Microsoft JhengHei",
+                sans-serif;
 
             background-color: #f5f1e8;
 
@@ -32,9 +42,31 @@
 
             text-align: center;
 
-            margin-bottom: 30px;
+            margin-bottom: 10px;
 
         }
+
+
+        /* =========================
+           數量
+           ========================= */
+
+
+        #sword-count {
+
+            text-align: center;
+
+            color: #777;
+
+            margin-bottom: 25px;
+
+        }
+
+
+
+        /* =========================
+           追加按鈕
+           ========================= */
 
 
         .add-area {
@@ -70,6 +102,12 @@
             background-color: #6f5635;
 
         }
+
+
+
+        /* =========================
+           追加區
+           ========================= */
 
 
         #select-area {
@@ -140,8 +178,6 @@
 
             margin-bottom: 15px;
 
-            box-sizing: border-box;
-
         }
 
 
@@ -176,13 +212,34 @@
         }
 
 
+
+        /* =========================
+           圖片顯示區
+           ========================= */
+
+
         #display-area {
 
-            max-width: 700px;
+            width: 100%;
+
+            max-width: 1200px;
 
             margin: 30px auto;
 
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 20px;
+
         }
+
+
+
+        /* =========================
+           每把刀
+           ========================= */
 
 
         .sword-card {
@@ -191,32 +248,59 @@
 
             border-radius: 12px;
 
-            padding: 15px 20px;
-
-            margin-bottom: 12px;
+            padding: 12px;
 
             box-shadow:
                 0 2px 8px rgba(0,0,0,0.15);
 
+            overflow: hidden;
+
         }
 
 
-        .sword-main {
+        .sword-image-area {
+
+            width: 100%;
+
+            aspect-ratio: 3 / 4;
+
+            background-color: #eee;
+
+            border-radius: 8px;
 
             display: flex;
 
             align-items: center;
 
-            justify-content: space-between;
+            justify-content: center;
 
-            gap: 15px;
+            overflow: hidden;
+
+            margin-bottom: 10px;
 
         }
 
 
-        .sword-info {
+        .sword-image {
 
-            flex: 1;
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+        }
+
+
+        .no-image {
+
+            color: #999;
+
+            font-size: 14px;
+
+            text-align: center;
+
+            padding: 20px;
 
         }
 
@@ -252,6 +336,8 @@
 
             gap: 8px;
 
+            margin-top: 12px;
+
         }
 
 
@@ -276,6 +362,12 @@
             background-color: #a55a5a;
 
         }
+
+
+
+        /* =========================
+           移動區
+           ========================= */
 
 
         #move-area {
@@ -313,6 +405,61 @@
         }
 
 
+
+        /* =========================
+           手機畫面
+           ========================= */
+
+
+        @media (max-width: 600px) {
+
+            body {
+
+                padding: 12px;
+
+            }
+
+
+            #display-area {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 10px;
+
+            }
+
+
+            .sword-card {
+
+                padding: 8px;
+
+            }
+
+
+            .sword-name {
+
+                font-size: 16px;
+
+            }
+
+
+            .sword-actions {
+
+                flex-direction: column;
+
+            }
+
+
+            .small-button {
+
+                width: 100%;
+
+            }
+
+        }
+
+
     </style>
 
 </head>
@@ -322,6 +469,24 @@
 
 
     <h1>刀劍男士顕現帳</h1>
+
+
+    <!-- =========================
+         刀劍數量
+         ========================= -->
+
+
+    <div id="sword-count">
+
+        目前共有 0 把刀劍
+
+    </div>
+
+
+
+    <!-- =========================
+         追加按鈕
+         ========================= -->
 
 
     <div class="add-area">
@@ -336,9 +501,9 @@
 
 
 
-    <!-- ========================= -->
-    <!-- 追加區域 -->
-    <!-- ========================= -->
+    <!-- =========================
+         追加區
+         ========================= -->
 
 
     <div id="select-area">
@@ -446,9 +611,6 @@
 
 
 
-        <!-- 最後 -->
-
-
         <label class="position-option">
 
 
@@ -469,9 +631,6 @@
 
         </label>
 
-
-
-        <!-- 插入位置 -->
 
 
         <label class="position-option">
@@ -534,9 +693,9 @@
 
 
 
-    <!-- ========================= -->
-    <!-- 移動區域 -->
-    <!-- ========================= -->
+    <!-- =========================
+         移動區
+         ========================= -->
 
 
     <div id="move-area">
@@ -552,13 +711,11 @@
         <p id="move-sword-name"></p>
 
 
-
         <h3>
 
             選擇新的位置
 
         </h3>
-
 
 
         <label class="position-option">
@@ -582,7 +739,6 @@
         </label>
 
 
-
         <label class="position-option">
 
 
@@ -601,7 +757,6 @@
 
 
         </label>
-
 
 
         <select
@@ -642,9 +797,9 @@
 
 
 
-    <!-- ========================= -->
-    <!-- 刀劍顯示區域 -->
-    <!-- ========================= -->
+    <!-- =========================
+         刀劍顯示區
+         ========================= -->
 
 
     <div id="display-area"></div>
@@ -785,7 +940,7 @@
 
         /*
          * =========================
-         * 開啟追加區
+         * 開啟追加
          * =========================
          */
 
@@ -807,7 +962,7 @@
 
         /*
          * =========================
-         * 關閉追加區
+         * 關閉追加
          * =========================
          */
 
@@ -913,7 +1068,9 @@
                 );
 
 
-            if (selected === "last") {
+            if (
+                selected === "last"
+            ) {
 
 
                 positionSelect.disabled = true;
@@ -1036,11 +1193,6 @@
 
 
 
-            /*
-             * 防止重複
-             */
-
-
             const alreadyAdded =
                 addedSwords.some(
                     function(sword) {
@@ -1085,12 +1237,9 @@
 
 
 
-            /*
-             * 放在最後
-             */
-
-
-            if (position === "last") {
+            if (
+                position === "last"
+            ) {
 
 
                 addedSwords.push(
@@ -1098,15 +1247,7 @@
                 );
 
 
-            }
-
-
-            /*
-             * 插在指定刀劍前面
-             */
-
-
-            else {
+            } else {
 
 
                 const positionSelect =
@@ -1154,12 +1295,6 @@
             updatePositionList();
 
 
-            /*
-             * 追加完成後
-             * 回到預設「最後」
-             */
-
-
             document.querySelector(
                 'input[name="position"][value="last"]'
             ).checked = true;
@@ -1194,6 +1329,20 @@
             display.innerHTML = "";
 
 
+            /*
+             * 更新數量
+             */
+
+
+            document.getElementById(
+                "sword-count"
+            ).textContent =
+                "目前共有 "
+                + addedSwords.length
+                + " 把刀劍";
+
+
+
             addedSwords.forEach(
                 function(sword, index) {
 
@@ -1208,60 +1357,84 @@
                         "sword-card";
 
 
+                    /*
+                     * 圖片檔名
+                     *
+                     * 目前先使用：
+                     *
+                     * images/刀名.jpg
+                     *
+                     */
+
+
+                    const imagePath =
+                        "images/"
+                        + sword.name
+                        + ".jpg";
+
+
+
                     card.innerHTML = `
 
-                        <div class="sword-main">
+                        <div class="sword-image-area">
 
+                            <img
+                                class="sword-image"
+                                src="${imagePath}"
+                                alt="${sword.name}"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
 
-                            <div class="sword-info">
+                            <div
+                                class="no-image"
+                                style="display:none;">
 
-
-                                <div class="sword-number">
-
-                                    ${index + 1}.
-
-                                </div>
-
-
-                                <div class="sword-name">
-
-                                    ${sword.name}
-
-                                </div>
-
-
-                                <div class="sword-type">
-
-                                    ${sword.type}
-
-                                </div>
-
+                                圖片尚未加入
 
                             </div>
 
-
-                            <div class="sword-actions">
-
-
-                                <button
-                                    class="small-button move-button"
-                                    onclick="startMove(${index})">
-
-                                    移動
-
-                                </button>
+                        </div>
 
 
-                                <button
-                                    class="small-button delete-button"
-                                    onclick="deleteSword(${index})">
+                        <div class="sword-number">
 
-                                    刪除
+                            ${index + 1}.
 
-                                </button>
+                        </div>
 
 
-                            </div>
+                        <div class="sword-name">
+
+                            ${sword.name}
+
+                        </div>
+
+
+                        <div class="sword-type">
+
+                            ${sword.type}
+
+                        </div>
+
+
+                        <div class="sword-actions">
+
+
+                            <button
+                                class="small-button move-button"
+                                onclick="startMove(${index})">
+
+                                移動
+
+                            </button>
+
+
+                            <button
+                                class="small-button delete-button"
+                                onclick="deleteSword(${index})">
+
+                                刪除
+
+                            </button>
 
 
                         </div>
@@ -1340,7 +1513,7 @@
 
         /*
          * =========================
-         * 更新移動位置清單
+         * 更新移動位置
          * =========================
          */
 
@@ -1360,11 +1533,6 @@
 
             addedSwords.forEach(
                 function(sword, index) {
-
-
-                    /*
-                     * 不顯示自己
-                     */
 
 
                     if (
@@ -1475,23 +1643,12 @@
                 ).value;
 
 
-
-            /*
-             * 先取出這把刀
-             */
-
-
             const movingSword =
                 addedSwords.splice(
                     movingIndex,
                     1
                 )[0];
 
-
-
-            /*
-             * 移到最後
-             */
 
 
             if (
@@ -1504,15 +1661,7 @@
                 );
 
 
-            }
-
-
-            /*
-             * 移到某把刀前面
-             */
-
-
-            else {
+            } else {
 
 
                 const select =
@@ -1532,12 +1681,6 @@
                 ) {
 
 
-                    /*
-                     * 如果沒有選擇
-                     * 放回原本位置
-                     */
-
-
                     addedSwords.splice(
                         movingIndex,
                         0,
@@ -1553,13 +1696,6 @@
                     return;
 
                 }
-
-
-                /*
-                 * 因為前面已經移走
-                 * 一把刀
-                 * 所以需要重新計算位置
-                 */
 
 
                 let newIndex =
@@ -1601,7 +1737,7 @@
 
         /*
          * =========================
-         * 關閉移動區
+         * 關閉移動
          * =========================
          */
 
@@ -1623,7 +1759,7 @@
 
         /*
          * =========================
-         * 刪除刀劍
+         * 刪除
          * =========================
          */
 
@@ -1663,6 +1799,17 @@
 
 
         }
+
+
+
+        /*
+         * =========================
+         * 初始畫面
+         * =========================
+         */
+
+
+        renderSwords();
 
 
     </script>
