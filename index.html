@@ -10,7 +10,11 @@
 body{
  margin:0;padding:20px;color:#333;
  font-family:"Microsoft JhengHei","Microsoft YaHei","Noto Sans CJK TC",sans-serif;
- background:#eee9df;
+ background:
+  radial-gradient(ellipse at 20% 10%,rgba(255,255,255,.9),transparent 42%),
+  radial-gradient(ellipse at 80% 85%,rgba(205,188,160,.22),transparent 45%),
+  repeating-linear-gradient(100deg,rgba(120,100,75,.025) 0,rgba(120,100,75,.025) 1px,transparent 1px,transparent 7px),
+  #e8e1d5;
 }
 h1{text-align:center;margin:8px 0;font-size:30px}
 #sword-count{text-align:center;color:#777;margin-bottom:18px}
@@ -50,10 +54,11 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
 #output-sheet{
  position:relative;width:1600px;height:900px;overflow:hidden;
  color:#222;background:
- radial-gradient(circle at 20% 20%,rgba(255,255,255,.70),transparent 25%),
- radial-gradient(circle at 78% 72%,rgba(150,130,100,.08),transparent 30%),
- repeating-linear-gradient(8deg,rgba(90,70,50,.018) 0,rgba(90,70,50,.018) 1px,transparent 1px,transparent 5px),
- #f4f0e8;
+ radial-gradient(ellipse at 12% 18%,rgba(255,255,255,.72),transparent 30%),
+ radial-gradient(ellipse at 88% 78%,rgba(160,135,105,.09),transparent 32%),
+ repeating-linear-gradient(7deg,rgba(110,90,65,.022) 0,rgba(110,90,65,.022) 1px,transparent 1px,transparent 6px),
+ repeating-linear-gradient(93deg,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 2px,transparent 2px,transparent 11px),
+ #f1ede5;
  font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;
 }
 .output-title{
@@ -61,14 +66,16 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
  font-size:43px;line-height:1.35;letter-spacing:4px;font-weight:normal
 }
 .output-info{
- position:absolute;right:98px;top:365px;writing-mode:vertical-rl;text-orientation:upright;
- font-size:20px;line-height:1.55;letter-spacing:2px;white-space:nowrap;
- display:flex;flex-direction:row;gap:18px
+ position:absolute;right:98px;top:375px;
+ display:flex;flex-direction:row;gap:8px;
+ font-size:20px;line-height:1.35;letter-spacing:2px;white-space:nowrap;
+ font-family:"Microsoft JhengHei","Microsoft YaHei",sans-serif;
 }
+.output-info .date-line,.output-info .owner-line{writing-mode:vertical-rl;text-orientation:upright;display:block;margin:0;}
 .output-info .date-line,.output-info .owner-line{margin:0}
 .output-swords{
  position:absolute;left:38px;right:155px;top:20px;bottom:20px;
- display:flex;flex-direction:column;justify-content:flex-start;gap:0
+ display:flex;flex-direction:column;gap:0
 }
 .output-row{
  display:flex;flex-direction:row-reverse;align-items:flex-start;
@@ -82,9 +89,10 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
 .output-sword .order{font-size:17px;line-height:1.1;margin-bottom:3px}
 .output-sword .name{font-size:19px;line-height:1.1;letter-spacing:1px}
 .output-sword .kiwami-mark{
- position:absolute;top:112px;left:50%;font-family:"DFKai-SB","KaiTi","STKaiti",serif;
+ position:static;display:block;margin-top:3px;
+ font-family:"DFKai-SB","KaiTi","STKaiti",serif;
  font-size:25px;font-weight:bold;color:#a51f67;
- transform:translateX(-50%) rotate(-8deg) skewX(-12deg);opacity:.93
+ transform:rotate(-8deg) skewX(-12deg);opacity:.93;
 }
 .output-sword .kiwami-mark:after{
  content:"";position:absolute;width:40px;height:9px;left:-10px;top:9px;
@@ -152,7 +160,7 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
 
 <div class="panel" style="text-align:center">
 <h2>④ 產出顯現帳圖片</h2>
-<p class="note">圖片固定為原網站的 1600×900 比例；105 把以內為每列 35 把、共 3 列。超過 105 把後，每增加一個級距就增加 5 欄（40、45、50……），圖片寬度同步增加。</p>
+<p class="note">圖片會直接顯示在網站上；需要保存時請在圖片上按滑鼠右鍵另存。105 把以內為每列 35 把、共 3 列；超過 105 把後，每增加 15 把就增加 5 欄（40、45、50……）。</p>
 <button onclick="generateImage()">產出顯現帳 PNG 圖片</button>
 </div>
 
@@ -165,6 +173,12 @@ textarea{width:100%;min-height:180px;margin-top:10px;border:1px solid #cfc7ba;bo
   </div>
   <div class="output-swords" id="output-swords"></div>
  </div>
+</div>
+
+<div id="output-preview-area" class="panel" style="display:none;text-align:center">
+ <h2>⑤ 顯現帳圖片預覽</h2>
+ <p class="note">圖片已顯示在網站上。需要保存時，請在圖片上按滑鼠右鍵 →「另存圖片」。</p>
+ <img id="output-preview" alt="刀劍男士顕現帳預覽" style="max-width:100%;height:auto;display:block;margin:0 auto;border:1px solid #cfc7ba;box-shadow:0 4px 18px rgba(60,45,30,.18)">
 </div>
 
 <script>
@@ -334,9 +348,10 @@ async function generateImage(){
  try{
   const sheet=document.getElementById("output-sheet");
   const canvas=await html2canvas(sheet,{scale:2,backgroundColor:"#f4f0e8",logging:false});
-  const owner=document.getElementById("owner-name").value.trim().replace(/[\\/:*?"<>|]/g,"_")||"審神者";
-  const a=document.createElement("a");a.download="刀劍男士顕現帳_"+owner+".png";a.href=canvas.toDataURL("image/png");a.click();
-  alert("圖片已產出！");
+  const preview=document.getElementById("output-preview");
+  preview.src=canvas.toDataURL("image/png");
+  document.getElementById("output-preview-area").style.display="block";
+  document.getElementById("output-preview-area").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(e){console.error(e);alert("產出圖片時發生問題，請確認網路正常後再試一次。")}
 }
 initTypeButtons();renderSwords();
